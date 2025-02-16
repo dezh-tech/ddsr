@@ -1,5 +1,5 @@
 <p align="center"> 
-    <img alt="ddsr" src="todo" width="150" height="150" />
+    <img alt="ddsr" src="./ddsr.svg" width="150" height="150" />
 </p>
 
 <h1 align="center">
