@@ -33,6 +33,7 @@ func main() {
 	config := LoadConfig()
 
 	relay.Info.Name = "zapoli"
+
 	relay.Info.Software = "dezh.tech/ddsr/zapoli"
 	relay.Info.Version = StringVersion()
 	relay.Info.PubKey = config.RelayPubkey
@@ -79,7 +80,6 @@ func main() {
 
 	relay.ManagementAPI.AllowPubKey = AllowPubkey
 	relay.ManagementAPI.BanPubKey = BanPubkey
-
 
 	mux := relay.Router()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
