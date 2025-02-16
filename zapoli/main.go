@@ -66,7 +66,7 @@ func main() {
 	relay.RejectEvent = append(relay.RejectEvent, policies.ValidateKind)
 
 	// blossom
-	bl := blossom.New(relay, "0.0.0.0"+config.BlossomPort)
+	bl := blossom.New(relay, "http://0.0.0.0"+config.BlossomPort)
 	bl.Store = blossom.EventStoreBlobIndexWrapper{Store: persistStore, ServiceURL: bl.ServiceURL}
 
 	blobStorage := disk.New(config.BlobStoragePath)
