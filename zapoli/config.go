@@ -18,6 +18,7 @@ type Config struct {
 
 	DBPath          string
 	BlobStoragePath string
+	WorkingDirectory      string
 
 	RelayPort   string
 	BlossomPort string
@@ -49,6 +50,7 @@ func LoadConfig() Config {
 
 		DBPath:          getEnv("DB_PATH"),
 		BlobStoragePath: getEnv("BLOB_STORAGE_PATH"),
+		WorkingDirectory: getEnv("WORKING_DIR"),
 
 		RelayPort:   getEnv("RELAY_PORT"),
 		BlossomPort: getEnv("BLOSSOM_PORT"),

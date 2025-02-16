@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/eventstore/bluge"
@@ -12,12 +17,22 @@ import (
 	"github.com/kehiy/blobstore/disk"
 )
 
+
+var (
+	relay  *khatru.Relay
+	config Config
+)
+
 func main() {
-	relay := khatru.NewRelay()
+
+	log.SetPrefix("zapoli ")
+	log.Printf("Running %s\n", StringVersion())
+
+	relay = khatru.NewRelay()
 
 	config := LoadConfig()
 
-	relay.Info.Name = "my relay"
+	relay.Info.Name = "zapoli"
 	relay.Info.Software = "dezh.tech/ddsr/zapoli"
 	relay.Info.Version = StringVersion()
 	relay.Info.PubKey = config.RelayPubkey
@@ -60,6 +75,12 @@ func main() {
 	bl.LoadBlob = append(bl.LoadBlob, blobStorage.Load)
 	bl.DeleteBlob = append(bl.DeleteBlob, blobStorage.Delete)
 
+	LoadManagement()
+
+	relay.ManagementAPI.AllowPubKey = AllowPubkey
+	relay.ManagementAPI.BanPubKey = BanPubkey
+
+
 	mux := relay.Router()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-type", "text/html")
@@ -68,4 +89,15 @@ func main() {
 
 	fmt.Println("running on" + config.RelayPort)
 	http.ListenAndServe(config.RelayPort, relay)
+
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+
+	sig := <-sigChan
+
+	log.Print("Received signal: Initiating graceful shutdown", "signal", sig.String())
+	persistStore.Close()
+	store.Close()
+	relay.Shutdown(context.Background())
 }
