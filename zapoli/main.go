@@ -1,8 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/eventstore/bluge"
@@ -12,12 +17,23 @@ import (
 	"github.com/kehiy/blobstore/disk"
 )
 
+
+var (
+	relay  *khatru.Relay
+	config Config
+)
+
 func main() {
-	relay := khatru.NewRelay()
 
-	config := LoadConfig()
+	log.SetPrefix("zapoli ")
+	log.Printf("Running %s\n", StringVersion())
 
-	relay.Info.Name = "my relay"
+	relay = khatru.NewRelay()
+
+	LoadConfig()
+
+	relay.Info.Name = config.RelayName
+
 	relay.Info.Software = "dezh.tech/ddsr/zapoli"
 	relay.Info.Version = StringVersion()
 	relay.Info.PubKey = config.RelayPubkey
@@ -51,7 +67,7 @@ func main() {
 	relay.RejectEvent = append(relay.RejectEvent, policies.ValidateKind)
 
 	// blossom
-	bl := blossom.New(relay, "0.0.0.0"+config.BlossomPort)
+	bl := blossom.New(relay, "http://0.0.0.0"+config.BlossomPort)
 	bl.Store = blossom.EventStoreBlobIndexWrapper{Store: persistStore, ServiceURL: bl.ServiceURL}
 
 	blobStorage := disk.New(config.BlobStoragePath)
@@ -60,12 +76,28 @@ func main() {
 	bl.LoadBlob = append(bl.LoadBlob, blobStorage.Load)
 	bl.DeleteBlob = append(bl.DeleteBlob, blobStorage.Delete)
 
+	LoadManagement()
+
+	relay.ManagementAPI.AllowPubKey = AllowPubkey
+	relay.ManagementAPI.BanPubKey = BanPubkey
+
 	mux := relay.Router()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-type", "text/html")
 		fmt.Fprintf(w, `<b>welcome</b> to zapoly!`)
 	})
 
 	fmt.Println("running on" + config.RelayPort)
 	http.ListenAndServe(config.RelayPort, relay)
+
+
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
+
+	sig := <-sigChan
+
+	log.Print("Received signal: Initiating graceful shutdown", "signal", sig.String())
+	persistStore.Close()
+	store.Close()
+	relay.Shutdown(context.Background())
 }
