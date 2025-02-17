@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"slices"
 	"syscall"
 
 	"github.com/fiatjaf/eventstore/badger"
@@ -15,8 +16,8 @@ import (
 	"github.com/fiatjaf/khatru/blossom"
 	"github.com/fiatjaf/khatru/policies"
 	"github.com/kehiy/blobstore/disk"
+	"github.com/nbd-wtf/go-nostr"
 )
-
 
 var (
 	relay  *khatru.Relay
@@ -75,6 +76,13 @@ func main() {
 	bl.StoreBlob = append(bl.StoreBlob, blobStorage.Store)
 	bl.LoadBlob = append(bl.LoadBlob, blobStorage.Load)
 	bl.DeleteBlob = append(bl.DeleteBlob, blobStorage.Delete)
+	bl.RejectUpload = append(bl.RejectUpload, func(ctx context.Context, auth *nostr.Event, size int, ext string) (bool, string, int) {
+		if !slices.Contains(management.AllowedPubkeys, auth.PubKey) {
+			return true, "Unauthorized to upload.", http.StatusUnauthorized
+		}
+
+		return false, "ok", http.StatusOK
+	})
 
 	LoadManagement()
 
@@ -89,7 +97,6 @@ func main() {
 
 	fmt.Println("running on" + config.RelayPort)
 	http.ListenAndServe(config.RelayPort, relay)
-
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

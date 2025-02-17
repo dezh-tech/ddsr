@@ -1,0 +1,45 @@
+FROM golang:1.23.3 AS builder
+
+# Set the working directory
+WORKDIR /app
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the source code
+COPY . .
+
+# Build the binary
+RUN go build -o zapoli
+
+# Use a minimal base image
+FROM alpine:latest
+
+# Set working directory
+WORKDIR /app
+
+# Copy the built binary from the builder stage
+COPY --from=builder /app/zapoli .
+
+# Expose the relay port
+EXPOSE 3334
+
+# Set build arguments
+ARG RELAY_NAME
+ARG RELAY_PUBKEY
+ARG RELAY_DESCRIPTION
+ARG RELAY_URL
+ARG RELAY_ICON
+ARG RELAY_BANNER
+ARG RELAY_CONTACT
+ARG DB_PATH
+ARG BLOB_STORAGE_PATH
+ARG WORKING_DIR
+ARG RELAY_PORT
+ARG BLOSSOM_PORT
+
+# Run the application
+CMD ["./zapoli"]
