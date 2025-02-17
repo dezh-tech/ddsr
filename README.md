@@ -14,7 +14,7 @@ This project is based on [Khatru](https://github.com/fiatjaf/khatru), [EventStor
 
 Here is a list of DSRs developed by the Dezh:
 
-1. [Zapoli](./zaploi): A relay designed to used by [NIP-82](https://github.com/nostr-protocol/nips/pull/1336) clients. S
+1. [Zapoli](./zaploi): A relay designed to used by [NIP-82](https://github.com/nostr-protocol/nips/pull/1336) clients.
   - NIP-50: you can search between softwares.
   - Blossom: you can store software images, icons, and binaries.
   - NIP-86: you can limit write access to software publishers.
