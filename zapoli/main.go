@@ -32,7 +32,7 @@ func main() {
 
 	config := LoadConfig()
 
-	relay.Info.Name = "zapoli"
+	relay.Info.Name = config.RelayName
 
 	relay.Info.Software = "dezh.tech/ddsr/zapoli"
 	relay.Info.Version = StringVersion()
