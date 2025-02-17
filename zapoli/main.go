@@ -64,6 +64,13 @@ func main() {
 	relay.CountEvents = append(relay.CountEvents, persistStore.CountEvents)
 	relay.DeleteEvent = append(relay.DeleteEvent, persistStore.DeleteEvent)
 	relay.ReplaceEvent = append(relay.ReplaceEvent, persistStore.ReplaceEvent)
+	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
+		if !slices.Contains(management.AllowedPubkeys, event.PubKey) {
+			return true, "unauthorized"
+		}
+
+		return false, "ok"
+	})
 
 	relay.RejectEvent = append(relay.RejectEvent, policies.ValidateKind)
 
@@ -78,7 +85,7 @@ func main() {
 	bl.DeleteBlob = append(bl.DeleteBlob, blobStorage.Delete)
 	bl.RejectUpload = append(bl.RejectUpload, func(ctx context.Context, auth *nostr.Event, size int, ext string) (bool, string, int) {
 		if !slices.Contains(management.AllowedPubkeys, auth.PubKey) {
-			return true, "Unauthorized to upload.", http.StatusUnauthorized
+			return true, "unauthorized", http.StatusUnauthorized
 		}
 
 		return false, "ok", http.StatusOK
