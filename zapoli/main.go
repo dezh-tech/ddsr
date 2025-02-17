@@ -82,7 +82,7 @@ func main() {
 	relay.ManagementAPI.BanPubKey = BanPubkey
 
 	mux := relay.Router()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-type", "text/html")
 		fmt.Fprintf(w, `<b>welcome</b> to zapoly!`)
 	})
