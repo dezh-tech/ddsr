@@ -30,7 +30,7 @@ func main() {
 
 	relay = khatru.NewRelay()
 
-	config := LoadConfig()
+	LoadConfig()
 
 	relay.Info.Name = config.RelayName
 
