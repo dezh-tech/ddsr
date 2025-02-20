@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path"
 	"slices"
 	"syscall"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/fiatjaf/eventstore/bluge"
 	"github.com/fiatjaf/khatru"
 	"github.com/fiatjaf/khatru/blossom"
-	"github.com/fiatjaf/khatru/policies"
 	"github.com/kehiy/blobstore/disk"
 	"github.com/nbd-wtf/go-nostr"
 )
@@ -25,7 +25,6 @@ var (
 )
 
 func main() {
-
 	log.SetPrefix("zapoli ")
 	log.Printf("Running %s\n", StringVersion())
 
@@ -34,7 +33,6 @@ func main() {
 	LoadConfig()
 
 	relay.Info.Name = config.RelayName
-
 	relay.Info.Software = "dezh.tech/ddsr/zapoli"
 	relay.Info.Version = StringVersion()
 	relay.Info.PubKey = config.RelayPubkey
@@ -46,14 +44,14 @@ func main() {
 	relay.Info.AddSupportedNIPs([]int{50, 82})
 
 	persistStore := &badger.BadgerBackend{
-		Path: config.DBPath,
+		Path: path.Join(config.WorkingDirectory, "database"),
 	}
 
 	persistStore.Init()
 	defer persistStore.Close()
 
 	store := &bluge.BlugeBackend{
-		Path:          config.DBPath,
+		Path:          path.Join(config.WorkingDirectory, "search_database"),
 		RawEventStore: persistStore,
 	}
 	store.Init()
@@ -64,31 +62,34 @@ func main() {
 	relay.CountEvents = append(relay.CountEvents, persistStore.CountEvents)
 	relay.DeleteEvent = append(relay.DeleteEvent, persistStore.DeleteEvent)
 	relay.ReplaceEvent = append(relay.ReplaceEvent, persistStore.ReplaceEvent)
-	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
+	relay.RejectEvent = append(relay.RejectEvent, func(_ context.Context, event *nostr.Event) (reject bool, msg string) {
 		if !slices.Contains(management.AllowedPubkeys, event.PubKey) {
-			return true, "unauthorized"
+			return true, "restricted: you are not in the whitelist"
 		}
 
-		return false, "ok"
+		return false, ""
 	})
-
-	relay.RejectEvent = append(relay.RejectEvent, policies.ValidateKind)
 
 	// blossom
 	bl := blossom.New(relay, "http://0.0.0.0"+config.BlossomPort)
 	bl.Store = blossom.EventStoreBlobIndexWrapper{Store: persistStore, ServiceURL: bl.ServiceURL}
 
-	blobStorage := disk.New(config.BlobStoragePath)
+	if !PathExists(path.Join(config.WorkingDirectory, "blossom")) {
+		if err := Mkdir(path.Join(config.WorkingDirectory, "blossom")); err != nil {
+			log.Fatalf("can't make blossom directory: %s", err.Error())
+		}
+	}
+	blobStorage := disk.New(path.Join(config.WorkingDirectory, "blossom"))
 
 	bl.StoreBlob = append(bl.StoreBlob, blobStorage.Store)
 	bl.LoadBlob = append(bl.LoadBlob, blobStorage.Load)
 	bl.DeleteBlob = append(bl.DeleteBlob, blobStorage.Delete)
-	bl.RejectUpload = append(bl.RejectUpload, func(ctx context.Context, auth *nostr.Event, size int, ext string) (bool, string, int) {
+	bl.RejectUpload = append(bl.RejectUpload, func(_ context.Context, auth *nostr.Event, _ int, _ string) (bool, string, int) {
 		if !slices.Contains(management.AllowedPubkeys, auth.PubKey) {
-			return true, "unauthorized", http.StatusUnauthorized
+			return true, "restricted: you are not in the whitelist", http.StatusUnauthorized
 		}
 
-		return false, "ok", http.StatusOK
+		return false, "", http.StatusOK
 	})
 
 	LoadManagement()
@@ -99,10 +100,11 @@ func main() {
 	mux := relay.Router()
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("content-type", "text/html")
-		fmt.Fprintf(w, `<b>welcome</b> to zapoly!`)
+		fmt.Fprintf(w, `<b>welcome</b> to zapoli!`)
 	})
 
-	fmt.Println("running on" + config.RelayPort)
+	log.Println("Relay running on port: " + config.RelayPort)
+	log.Println("Blossom server running on port: " + config.BlossomPort)
 	http.ListenAndServe(config.RelayPort, relay)
 
 	sigChan := make(chan os.Signal, 1)

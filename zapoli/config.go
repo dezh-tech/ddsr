@@ -16,9 +16,7 @@ type Config struct {
 	RelayIcon        string
 	RelayBanner      string
 
-	DBPath          string
-	BlobStoragePath string
-	WorkingDirectory      string
+	WorkingDirectory string
 
 	RelayPort   string
 	BlossomPort string
@@ -37,9 +35,6 @@ func LoadConfig() {
 		RelayContact:     getEnv("RELAY_CONTACT"),
 		RelayIcon:        getEnv("RELAY_ICON"),
 		RelayBanner:      getEnv("RELAY_BANNER"),
-
-		DBPath:          getEnv("DB_PATH"),
-		BlobStoragePath: getEnv("BLOB_STORAGE_PATH"),
 		WorkingDirectory: getEnv("WORKING_DIR"),
 
 		RelayPort:   getEnv("RELAY_PORT"),

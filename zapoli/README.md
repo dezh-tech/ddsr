@@ -12,6 +12,7 @@ Zapoli is a purpose-built Nostr relay designed for projects like [ZapStore](http
 ## Installation  
 
 ### Setup
+
 Here's an adapted **Setup** section considering that you'll push the base image to **GitHub Container Registry (GHCR)**, allowing users to pull and run it easily.  
 
 ---
@@ -40,9 +41,7 @@ The easiest way to run Zapoli is by using the prebuilt image:
      -e RELAY_ICON="https://your-icon-url.png" \
      -e RELAY_BANNER="https://your-banner-url.png" \
      -e RELAY_CONTACT="https://dezh.tech" \
-     -e DB_PATH="db" \
-     -e BLOB_STORAGE_PATH="blob" \
-     -e WORKING_DIR="config" \
+     -e WORKING_DIR="zapoli_wd/" \
      -e RELAY_PORT=":3334" \
      -e BLOSSOM_PORT=":3334" \
      ghcr.io/dezh-tech/zapoli:latest
@@ -74,9 +73,7 @@ For a more structured deployment, use **Docker Compose**:
          RELAY_ICON: "https://your-icon-url.png"
          RELAY_BANNER: "https://your-banner-url.png"
          RELAY_CONTACT: "https://dezh.tech"
-         DB_PATH: "db"
-         BLOB_STORAGE_PATH: "blob"
-         WORKING_DIR: "config"
+         WORKING_DIR: "zapoli_wd/"
          RELAY_PORT: ":3334"
          BLOSSOM_PORT: ":3334"
    ```
@@ -102,9 +99,7 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 
 ### Storage & Working Directory  
 
-- `DB_PATH` – Path where the database should be stored (default: `db`).  
-- `BLOB_STORAGE_PATH` – Storage path for blobs (default: `blob`).  
-- `WORKING_DIR` – Configuration working directory (default: `config`).  
+- `WORKING_DIR` – Configuration working directory (default: `zapoli_wd`).  
 
 ### Networking & Ports  
 
@@ -127,4 +122,4 @@ Pull requests are welcome! Feel free to open an issue if you have feature reques
 
 ## License  
 
-MIT License. See `LICENSE` for details.  
+This software is published under [MIT License](../LICENSE).
