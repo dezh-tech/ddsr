@@ -1,6 +1,18 @@
-# Zapoli - A Specialized Nostr Relay For AppStores
+<p align="center"> 
+    <img alt="zapoli" src="./static/img/logo-transp.png" width="150" height="150" />
+</p>
+
+<h1 align="center">
+A Specialized Nostr Relay For AppStores
+</h1>
+
+<br/>
 
 Zapoli is a purpose-built Nostr relay designed for projects like [ZapStore](https://zapstore.dev/). It provides BlobStore and management (NIP-86) and implements robust access control mechanisms, allowing pubkeys to be explicitly allowed or banned.  
+
+## Screenshot
+
+<img alt="zapoli" src="./static/img/image.png"/>
 
 ## Features  
 

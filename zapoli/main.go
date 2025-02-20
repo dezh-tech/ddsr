@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	_ "embed"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -22,6 +23,9 @@ import (
 var (
 	relay  *khatru.Relay
 	config Config
+
+	//go:embed static/index.html
+	landingTempl []byte
 )
 
 func main() {
@@ -98,10 +102,7 @@ func main() {
 	relay.ManagementAPI.BanPubKey = BanPubkey
 
 	mux := relay.Router()
-	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("content-type", "text/html")
-		fmt.Fprintf(w, `<b>welcome</b> to zapoli!`)
-	})
+	mux.HandleFunc("GET /{$}", StaticViewHandler)
 
 	log.Println("Relay running on port: " + config.RelayPort)
 	log.Println("Blossom server running on port: " + config.BlossomPort)
@@ -116,4 +117,22 @@ func main() {
 	persistStore.Close()
 	store.Close()
 	relay.Shutdown(context.Background())
+}
+
+func StaticViewHandler(w http.ResponseWriter, _ *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	t := template.New("webpage")
+	t, err := t.Parse(string(landingTempl))
+	if err != nil {
+		http.Error(w, "Error parsing template", http.StatusInternalServerError)
+
+		return
+	}
+
+	err = t.Execute(w, relay.Info)
+	if err != nil {
+		http.Error(w, "Error executing template", http.StatusInternalServerError)
+
+		return
+	}
 }
