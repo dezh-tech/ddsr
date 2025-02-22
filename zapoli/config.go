@@ -2,50 +2,28 @@ package main
 
 import (
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
-	RelayName        string
-	RelayPubkey      string
-	RelayDescription string
-	RelayURL         string
-	RelayContact     string
-	RelayIcon        string
-	RelayBanner      string
+	RelayName        string `envconfig:"RELAY_NAME"`
+	RelayPubkey      string `envconfig:"RELAY_PUBKEY"`
+	RelayDescription string `envconfig:"RELAY_DESCRIPTION"`
+	RelayURL         string `envconfig:"RELAY_URL"`
+	RelayContact     string `envconfig:"RELAY_CONTACT"`
+	RelayIcon        string `envconfig:"RELAY_ICON"`
+	RelayBanner      string `envconfig:"RELAY_BANNER"`
 
-	WorkingDirectory string
+	WorkingDirectory string `envconfig:"WORKING_DIR"`
 
-	RelayPort   string
-	BlossomPort string
+	RelayPort   string `envconfig:"RELAY_PORT"`
+	BlossomPort string `envconfig:"BLOSSOM_PORT"`
 }
 
 func LoadConfig() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatalf("Can't load .env: %s\n", err.Error())
+	if err := envconfig.Process("", &config); err != nil {
+		log.Fatalf("failed to read from env: %s", err)
+		return
 	}
-
-	config = Config{
-		RelayName:        getEnv("RELAY_NAME"),
-		RelayPubkey:      getEnv("RELAY_PUBKEY"),
-		RelayDescription: getEnv("RELAY_DESCRIPTION"),
-		RelayURL:         getEnv("RELAY_URL"),
-		RelayContact:     getEnv("RELAY_CONTACT"),
-		RelayIcon:        getEnv("RELAY_ICON"),
-		RelayBanner:      getEnv("RELAY_BANNER"),
-		WorkingDirectory: getEnv("WORKING_DIR"),
-
-		RelayPort:   getEnv("RELAY_PORT"),
-		BlossomPort: getEnv("BLOSSOM_PORT"),
-	}
-}
-
-func getEnv(key string) string {
-	value, exists := os.LookupEnv(key)
-	if !exists {
-		log.Fatalf("Environment variable %s not set", key)
-	}
-	return value
 }
