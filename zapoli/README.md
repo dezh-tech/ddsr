@@ -66,30 +66,9 @@ The easiest way to run Zapoli is by using the prebuilt image:
 
 For a more structured deployment, use **Docker Compose**:
 
-1. **Create `docker-compose.yml`**
+1. **use `compose.yml`**
+use the exist compose file in the zapoli directory
 
-   ```yaml
-   version: "3.8"
-
-   services:
-     zapoli:
-       image: ghcr.io/dezh-tech/zapoli:latest
-       container_name: zapoli
-       restart: unless-stopped
-       ports:
-         - "3334:3334"
-       environment:
-         RELAY_NAME: "zapoli"
-         RELAY_PUBKEY: "your_pubkey"
-         RELAY_DESCRIPTION: "A Nostr relay"
-         RELAY_URL: "wss://abc.com"
-         RELAY_ICON: "https://your-icon-url.png"
-         RELAY_BANNER: "https://your-banner-url.png"
-         RELAY_CONTACT: "https://dezh.tech"
-         WORKING_DIR: "zapoli_wd/"
-         RELAY_PORT: ":3334"
-         BLOSSOM_PORT: ":3334"
-   ```
 
 2. **Run with Compose**
    ```sh
