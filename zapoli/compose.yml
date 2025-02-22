@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  zapoli:
+    container_name: zapoli
+    image: dezhtech/zapoli:latest
+    restart: unless-stopped
+    ports:
+      - "3334:3334"
+    environment:
+      RELAY_NAME: "zapoli"
+      RELAY_PUBKEY: "your_pubkey"
+      RELAY_DESCRIPTION: "A Nostr relay"
+      RELAY_URL: "wss://abc.com"
+      RELAY_ICON: "https://your-icon-url.png"
+      RELAY_BANNER: "https://your-banner-url.png"
+      RELAY_CONTACT: "https://dezh.tech"
+      WORKING_DIR: "zapoli_wd/"
+      RELAY_PORT: ":3334"
+      BLOSSOM_PORT: ":3334"
+    volumes:
+      - zapoli_data:/app/zapoli_wd/
+    networks:
+      - zapoli_network
+
+volumes:
+  zapoli_data:
