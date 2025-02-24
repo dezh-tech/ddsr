@@ -13,7 +13,7 @@ RUN go mod download
 COPY . .
 
 # Build a statically linked binary compatible with Alpine
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o zapoli
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o 210maxi
 
 # Use a minimal base image
 FROM alpine:latest
