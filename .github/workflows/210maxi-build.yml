@@ -1,13 +1,13 @@
-name: Create and publish Docker images zapoli relay
+name: Create and publish Docker image for 210maxi relay
 
 on:
   push:
     tags:
-      - 'zapoli@v*'
+      - '210maxi@v*'
 
 env:
   REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/zapoli
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/210maxi
   BASE_TAG: latest
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v5
         with:
-          context: zapoli
+          context: 210maxi
           dockerfile: dockerfile
           push: true
           tags: |
