@@ -10,7 +10,7 @@ Domain Specific Relays (DSR)
 
 This repository contains a set of [Nostr](https://nostr.com) relays designed to be used for specific purposes.
 
-This project is based on [Khatru](https://github.com/fiatjaf/khatru), [EventStore](https://github.com/fiatjaf/eventstore), [BlobStore](github.com/kehiy/blobstore) and [go-nostr](github.com/nbd-wtf/go-nostr).
+This project is based on [Khatru](https://github.com/fiatjaf/khatru), [Event Store](https://github.com/fiatjaf/eventstore), [Blob Store](github.com/kehiy/blobstore) and [Go Nostr](github.com/nbd-wtf/go-nostr).
 
 Here is a list of DSRs developed by the Dezh:
 
