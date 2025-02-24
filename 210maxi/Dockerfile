@@ -28,7 +28,7 @@ RUN apk add --no-cache ca-certificates
 COPY --from=builder /app/210maxi .
 
 # Ensure the binary is executable
-RUN chmod +x zapoli
+RUN chmod +x 210maxi
 
 # Expose the relay port
 EXPOSE 2100
