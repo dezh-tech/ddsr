@@ -18,6 +18,7 @@ import (
 	"github.com/fiatjaf/khatru/blossom"
 	"github.com/kehiy/blobstore/disk"
 	"github.com/nbd-wtf/go-nostr"
+	"github.com/nbd-wtf/go-nostr/nip86"
 )
 
 var (
@@ -50,22 +51,19 @@ func main() {
 	persistStore := &badger.BadgerBackend{
 		Path: path.Join(config.WorkingDirectory, "database"),
 	}
-
 	persistStore.Init()
-	defer persistStore.Close()
 
-	store := &bluge.BlugeBackend{
+	searchDB := &bluge.BlugeBackend{
 		Path:          path.Join(config.WorkingDirectory, "search_database"),
 		RawEventStore: persistStore,
 	}
-	store.Init()
-	defer store.Close()
+	searchDB.Init()
 
-	relay.StoreEvent = append(relay.StoreEvent, persistStore.SaveEvent)
-	relay.QueryEvents = append(relay.QueryEvents, persistStore.QueryEvents)
+	relay.StoreEvent = append(relay.StoreEvent, persistStore.SaveEvent, searchDB.SaveEvent)
+	relay.QueryEvents = append(relay.QueryEvents, persistStore.QueryEvents, searchDB.QueryEvents)
 	relay.CountEvents = append(relay.CountEvents, persistStore.CountEvents)
-	relay.DeleteEvent = append(relay.DeleteEvent, persistStore.DeleteEvent)
-	relay.ReplaceEvent = append(relay.ReplaceEvent, persistStore.ReplaceEvent)
+	relay.DeleteEvent = append(relay.DeleteEvent, persistStore.DeleteEvent, searchDB.DeleteEvent)
+	relay.ReplaceEvent = append(relay.ReplaceEvent, persistStore.ReplaceEvent, searchDB.ReplaceEvent)
 	relay.RejectEvent = append(relay.RejectEvent, func(_ context.Context, event *nostr.Event) (reject bool, msg string) {
 		if !slices.Contains(management.AllowedPubkeys, event.PubKey) {
 			return true, "restricted: you are not in the whitelist"
@@ -100,12 +98,21 @@ func main() {
 
 	relay.ManagementAPI.AllowPubKey = AllowPubkey
 	relay.ManagementAPI.BanPubKey = BanPubkey
+	relay.ManagementAPI.RejectAPICall = append(relay.ManagementAPI.RejectAPICall,
+		func(ctx context.Context, mp nip86.MethodParams) (reject bool, msg string) {
+			auth := khatru.GetAuthed(ctx)
+			if !slices.Contains(config.Admins, auth) {
+				return true, "your are not an admin"
+			}
+
+			return false, ""
+		})
 
 	mux := relay.Router()
 	mux.HandleFunc("GET /{$}", StaticViewHandler)
 
-	log.Println("Relay running on port: " + config.RelayPort)
-	log.Println("Blossom server running on port: " + config.BlossomPort)
+	log.Println("Relay running on port: ", config.RelayPort)
+	log.Println("Blossom server running on port: ", config.BlossomPort)
 	http.ListenAndServe(config.RelayPort, relay)
 
 	sigChan := make(chan os.Signal, 1)
@@ -115,8 +122,7 @@ func main() {
 
 	log.Print("Received signal: Initiating graceful shutdown", "signal", sig.String())
 	persistStore.Close()
-	store.Close()
-	relay.Shutdown(context.Background())
+	searchDB.Close()
 }
 
 func StaticViewHandler(w http.ResponseWriter, _ *http.Request) {

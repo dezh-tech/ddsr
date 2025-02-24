@@ -17,10 +17,7 @@ type Config struct {
 
 	WorkingDirectory string `envconfig:"WORKING_DIR"`
 
-	RelayPort   string `envconfig:"RELAY_PORT"`
-	BlossomPort string `envconfig:"BLOSSOM_PORT"`
-
-	Admins []string `envconfig:"ADMIN_PUBKEYS"`
+	RelayPort string `envconfig:"RELAY_PORT"`
 }
 
 func LoadConfig() {

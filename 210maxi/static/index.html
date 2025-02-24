@@ -14,24 +14,24 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-r from-[#966957] to-[#dbb184] text-white flex flex-col">
+<body class="bg-gradient-to-r from-black to-gray-800 text-white flex flex-col">
     <div class="flex-grow flex flex-col items-center justify-center px-4">
         <div class="max-w-2xl w-full">
             <div class="flex flex-col items-center justify-center mb-8 text-center">
                 <a href="{{.Icon}}">
                     <img src="{{.Icon}}" class="w-24 h-24 rounded-full border-2 border-white mb-2" />
                 </a>
-                <h1 class="text-3xl font-bold text-[#dbb184]">{{.Name}}</h1>
+                <h1 class="text-3xl font-bold text-white">{{.Name}}</h1>
                 <p class="text-lg text-gray-300">{{.Description}}</p>
             </div>
 
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-2xl font-bold text-[#dbb184] mb-4">Contact Information</h2>
+            <div class="bg-gray-900 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-2xl font-bold text-white mb-4">Contact Information</h2>
                 <table class="w-full">
                     <tbody>
                         <tr>
                             <td class="font-semibold">Pubkey:</td>
-                            <td><a href="nostr:{{.PubKey}}" class="text-[#dbb184] hover:underline">Operator Nostr</a></td>
+                            <td><a href="nostr:{{.PubKey}}" class="text-white hover:underline">{{.PubKey}}</a></td>
                         </tr>
                         <tr>
                             <td class="font-semibold">Contact:</td>
@@ -41,14 +41,14 @@
                 </table>
             </div>
 
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-2xl font-bold text-[#dbb184] mb-4">Software</h2>
+            <div class="bg-gray-900 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-2xl font-bold text-white mb-4">Software</h2>
                 <table class="w-full">
                     <tbody>
                         <tr>
                             <td class="font-semibold">Software:</td>
-                            <!-- TODO::: replace with dezh.tech/ddsr/zapoli -->
-                            <td><a href="https://github.com/dezh-tech/ddsr" class="text-[#dbb184] hover:underline">Zapoli</a></td>
+                            <!-- TODO::: replace with dezh.tech/ddsr/210maxi -->
+                            <td><a href="https://github.com/dezh-tech/ddsr" class="text-white hover:underline">210Maxi</a></td>
                         </tr>
                         <tr>
                             <td class="font-semibold">Version:</td>
@@ -64,9 +64,9 @@
         </div>
     </div>
 
-    <footer class="w-full text-center py-6 bg-gray-800 mt-auto">
+    <footer class="w-full text-center py-6 bg-gray-900 mt-auto">
         <p class="text-lg text-gray-400 mb-2">
-            Please use a <a href="https://github.com/aljazceru/awesome-nostr#clients" class="text-[#dbb184] hover:text-[#966957] underline">Nostr client</a> to connect.
+            Please use a <a href="https://github.com/aljazceru/awesome-nostr#clients" class="text-white hover:underline">Nostr client</a> to connect.
         </p>
     </footer>
 </body>
