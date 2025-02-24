@@ -1,8 +1,6 @@
 module github.com/dezh-tech/ddsr/zapoli
 
-go 1.23.3
-
-toolchain go1.23.6
+go 1.23.6
 
 require (
 	github.com/fiatjaf/eventstore v0.16.0
