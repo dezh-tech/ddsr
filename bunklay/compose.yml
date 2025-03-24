@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  bunklay:
+    container_name: bunklay
+    image: dezhtech/bunklay:latest
+    restart: unless-stopped
+    ports:
+      - "3334:3334"
+    environment:
+      RELAY_NAME: "bunklay"
+      RELAY_PUBKEY: "your_pubkey"
+      RELAY_DESCRIPTION: "A Nostr relay"
+      RELAY_URL: "wss://abc.com"
+      RELAY_ICON: "https://your-icon-url.png"
+      RELAY_BANNER: "https://your-banner-url.png"
+      RELAY_CONTACT: "https://dezh.tech"
+      RELAY_PORT: ":3334"
+    networks:
+      - bunklay_network
+
+volumes:
+  bunklay_network:
