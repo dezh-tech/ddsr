@@ -5,9 +5,9 @@ import "fmt"
 // These constants follow the semantic versioning 2.0.0 spec.
 // see: http://semver.org
 var (
-	major = 1
+	major = 0
 	minor = 0
-	patch = 0
+	patch = 1
 	meta  = ""
 )
 
