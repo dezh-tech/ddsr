@@ -2,26 +2,27 @@ version: '3.8'
 
 services:
   zapoli:
-    container_name: zapoli
-    image: dezhtech/zapoli:latest
+    container_name: pages
+    image: dezhtech/pages:latest
     restart: unless-stopped
     ports:
       - "3334:3334"
     environment:
-      RELAY_NAME: "zapoli"
+      RELAY_NAME: "pages"
       RELAY_PUBKEY: "your_pubkey"
       RELAY_DESCRIPTION: "A Nostr relay"
       RELAY_URL: "wss://abc.com"
       RELAY_ICON: "https://your-icon-url.png"
       RELAY_BANNER: "https://your-banner-url.png"
       RELAY_CONTACT: "https://dezh.tech"
-      WORKING_DIR: "zapoli_wd/"
+      WORKING_DIR: "pages_wd/"
       RELAY_PORT: ":3334"
       ADMIN_PUBKEYS: ""
+      DISC_RELAYS: "nos.lol,purplepag.es,relay.nostr.lol,jellyfish.land,relay.primal.net,nostr.mom,nostr.wine,nostr.land"
     volumes:
-      - zapoli_data:/app/zapoli_wd/
+      - pages_data:/app/pages_wd/
     networks:
-      - zapoli_network
+      - pages_network
 
 volumes:
-  zapoli_data:
+  pages_data:

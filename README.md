@@ -24,6 +24,13 @@ Here is a list of DSRs developed by the Dezh:
     - NIP-50: search your favorite tiny notes.
     - NIP-86: manageable with support of reportings. (WIP)
 
+3. [Pages](./pages//): A relay that only keeps profiles and follow lists. You can simply resolve any pubkey from it. 
+    - NIP-50: you can search profiles.
+    - You can directly send your profile update/deletion to it.
+    - It scrape new profiles.
+    - Optional Blossom server to host profile pictures and banners.
+    - NIP-86: Ban specific profiles/Check reported ones.
+
 > [!NOTE]
 > You can open your target relay and find full documentation there.
 

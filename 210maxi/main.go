@@ -28,7 +28,7 @@ var (
 )
 
 func main() {
-	log.SetPrefix("zapoli ")
+	log.SetPrefix("210maxi ")
 	log.Printf("Running %s\n", StringVersion())
 
 	relay = khatru.NewRelay()
@@ -36,14 +36,14 @@ func main() {
 	LoadConfig()
 
 	relay.Info.Name = config.RelayName
-	relay.Info.Software = "dezh.tech/ddsr/210maxi"
+	relay.Info.Software = "https://github.com/dezh-tech/ddsr"
 	relay.Info.Version = StringVersion()
 	relay.Info.PubKey = config.RelayPubkey
 	relay.Info.Description = config.RelayDescription
 	relay.Info.Icon = config.RelayIcon
 	relay.Info.Contact = config.RelayContact
 	relay.Info.URL = config.RelayURL
-	// relay.Info.Banner = config.RelayBanner
+	relay.Info.Banner = config.RelayBanner
 	relay.Info.SupportedNIPs = append(relay.Info.SupportedNIPs, "B1", 50, 45)
 
 	mainDB := &badger.BadgerBackend{

@@ -13,7 +13,7 @@ RUN go mod download
 COPY . .
 
 # Build a statically linked binary compatible with Alpine
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o 210maxi
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pages
 
 # Use a minimal base image
 FROM alpine:latest
@@ -25,13 +25,13 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates
 
 # Copy the built binary from the builder stage
-COPY --from=builder /app/210maxi .
+COPY --from=builder /app/pages .
 
 # Ensure the binary is executable
-RUN chmod +x 210maxi
+RUN chmod +x pages
 
 # Expose the relay port
-EXPOSE 2100
+EXPOSE 3334
 
 # Run the application
-CMD ["./210maxi"]
+CMD ["./pages"]
