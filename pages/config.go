@@ -19,7 +19,8 @@ type Config struct {
 
 	RelayPort string `envconfig:"RELAY_PORT"`
 
-	Admins []string `envconfig:"ADMIN_PUBKEYS"`
+	Admins          []string `envconfig:"ADMIN_PUBKEYS"`
+	DiscoveryRelays []string `envconfig:"DISC_RELAYS"`
 }
 
 func LoadConfig() {

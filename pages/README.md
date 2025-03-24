@@ -1,24 +1,25 @@
 <p align="center"> 
-    <img alt="zapoli" src="./static/img/logo-transp.png" width="150" height="150" />
+    <img alt="pages" src="./static/img/logo-transp.png" width="150" height="150" />
 </p>
 
 <h1 align="center">
-A Specialized Nostr Relay For AppStores
+A Nostr relay only for profiles!
 </h1>
 
 <br/>
 
-Zapoli is a purpose-built Nostr relay designed for projects like [ZapStore](https://zapstore.dev/). It provides BlobStore and management (NIP-86) and implements robust access control mechanisms, allowing pubkeys to be explicitly allowed or banned.
-
 ## Screenshot
 
-<img alt="zapoli" src="./static/img/image.png"/>
+<img alt="pages" src="./static/img/ss.png"/>
 
 ## Features
 
-- **BlobStore Support**: Enables efficient storage and retrieval of blobs.
-- **Management(NIP-86)**: Allow or ban pubkeys to manage relay participation.
-- **NIP-50: Search**: Allow searching softwares.
+- NIP-50: you can search profiles.
+- You can directly send your profile update/deletion to it.
+- It scrape new profiles.
+- Optional Blossom server to host profile pictures and banners.
+- NIP-86: Ban specific profiles/Check reported ones.
+
 
 ## Installation
 
@@ -34,29 +35,30 @@ Here's an adapted **Setup** section considering that you'll push the base image 
 
 #### **Option 1: Use Prebuilt Docker Image (Recommended)**
 
-The easiest way to run Zapoli is by using the prebuilt image:
+The easiest way to run Pages is by using the prebuilt image:
 
 1. **Pull the latest image**
 
    ```sh
-   docker pull dezhtech/zapoli
+   docker pull dezhtech/pages
    ```
 
-2. **Run Zapoli with environment variables**
+2. **Run Pages with environment variables**
    ```sh
-   docker run -d --name zapoli \
+   docker run -d --name pages \
    -p 3334:3334 \
-   -e RELAY_NAME="zapoli" \
+   -e RELAY_NAME="pages" \
    -e RELAY_PUBKEY="your_pubkey" \
    -e RELAY_DESCRIPTION="Specialized Nostr Relay For AppStores" \
    -e RELAY_URL="wss://jellyfish.land" \
    -e RELAY_ICON="https://your-icon-url.png" \
    -e RELAY_BANNER="https://your-banner-url.png" \
    -e RELAY_CONTACT="https://dezh.tech" \
-   -e WORKING_DIR="zapoli_wd/" \
+   -e WORKING_DIR="pages_wd/" \
    -e RELAY_PORT=":3334" \
    -e ADMIN_PUBKEYS="" \
-   dezhtech/zapoli
+   -e DISC_RELAYS="nos.lol,purplepag.es,relay.nostr.lol,jellyfish.land,relay.primal.net,nostr.mom,nostr.wine,nostr.land" \
+   dezhtech/pages
    ```
 
 ---
@@ -66,7 +68,7 @@ The easiest way to run Zapoli is by using the prebuilt image:
 For a more structured deployment, use **Docker Compose**:
 
 1. **use `compose.yml`**
-use the exist compose file in the zapoli directory
+use the exist compose file in the pages directory
 
 
 2. **Run with Compose**
@@ -80,7 +82,7 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 
 ### Relay Metadata
 
-- `RELAY_NAME` – The name of the relay (default: `zapoli`).
+- `RELAY_NAME` – The name of the relay (default: `pages`).
 - `RELAY_PUBKEY` – The owner's hex key (convert `npub` to hex [here](https://nostrcheck.me/converter/)).
 - `RELAY_DESCRIPTION` – A short description of the relay.
 - `RELAY_URL` – WebSocket URL for the relay (e.g., `wss://abc.com`).
@@ -90,7 +92,7 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 
 ### Storage & Working Directory
 
-- `WORKING_DIR` – Configuration working directory (default: `zapoli_wd`).
+- `WORKING_DIR` – Configuration working directory (default: `pages_wd`).
 
 ### Networking & Ports
 

@@ -16,6 +16,7 @@ import (
 	"github.com/fiatjaf/eventstore/bluge"
 	"github.com/fiatjaf/khatru"
 	"github.com/fiatjaf/khatru/blossom"
+	"github.com/fiatjaf/khatru/policies"
 	"github.com/kehiy/blobstore/disk"
 	"github.com/nbd-wtf/go-nostr"
 	"github.com/nbd-wtf/go-nostr/nip86"
@@ -30,12 +31,19 @@ var (
 )
 
 func main() {
-	log.SetPrefix("zapoli ")
+	log.SetPrefix("pages ")
 	log.Printf("Running %s\n", StringVersion())
 
 	relay = khatru.NewRelay()
 
 	LoadConfig()
+
+	config.DiscoveryRelays = []string{
+		"nos.lol", "purplepag.es",
+		"jellyfish.land", "relay.primal.net", "nostr.mom", "nostr.wine", "nostr.land",
+	}
+	config.WorkingDirectory = "pages_wd/"
+	config.RelayIcon = "https://file.nostrmedia.com/f/bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5/517788c462ab4f1ea8405ca09247ad35e5fdb462282aacc18e258896ded12bc4.png"
 
 	relay.Info.Name = config.RelayName
 	relay.Info.Software = "https://github.com/dezh-tech/ddsr"
@@ -46,7 +54,7 @@ func main() {
 	relay.Info.Contact = config.RelayContact
 	relay.Info.URL = config.RelayURL
 	relay.Info.Banner = config.RelayBanner
-	relay.Info.AddSupportedNIPs([]int{50, 82})
+	relay.Info.AddSupportedNIPs([]int{50, 45})
 
 	persistStore := &badger.BadgerBackend{
 		Path: path.Join(config.WorkingDirectory, "database"),
@@ -68,12 +76,24 @@ func main() {
 		management.Lock()
 		defer management.Unlock()
 
-		if !slices.Contains(management.AllowedPubkeys, event.PubKey) {
-			return true, "restricted: you are not in the whitelist"
+		_, bannedPubkey := management.BannedPubkeys[event.PubKey]
+		if bannedPubkey {
+			return true, "blocked: you are blacklisted"
+		}
+
+		_, bannedEvent := management.BannedEvents[event.ID]
+		if bannedEvent {
+			return true, "blocked: event is blocked"
 		}
 
 		return false, ""
 	})
+
+	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
+		return policies.ValidateKind(ctx, event)
+	})
+
+	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(false, 0, 3, 5, 10002))
 
 	// blossom
 	bl := blossom.New(relay, config.RelayURL)
@@ -93,8 +113,9 @@ func main() {
 		management.Lock()
 		defer management.Unlock()
 
-		if !slices.Contains(management.AllowedPubkeys, auth.PubKey) {
-			return true, "restricted: you are not in the whitelist", http.StatusUnauthorized
+		_, banned := management.BannedPubkeys[auth.PubKey]
+		if banned {
+			return true, "blocked: you are blacklisted", http.StatusUnauthorized
 		}
 
 		return false, "", http.StatusOK
@@ -102,13 +123,39 @@ func main() {
 
 	LoadManagement()
 
-	relay.ManagementAPI.AllowPubKey = AllowPubkey
+	for _, admin := range config.Admins {
+		_, isAdmin := management.Admins[admin]
+		if isAdmin {
+			continue
+		}
+
+		management.Admins[admin] = []string{"*"}
+
+		UpdateManagement()
+	}
+
 	relay.ManagementAPI.BanPubKey = BanPubkey
+	relay.ManagementAPI.BanEvent = BanEvent
+	relay.ManagementAPI.ListBannedEvents = ListBannedEvents
+	relay.ManagementAPI.ListEventsNeedingModeration = ListEventsNeedingModeration
+	relay.ManagementAPI.BlockIP = BlockIP
+	relay.ManagementAPI.UnblockIP = UnblockIP
+	relay.ManagementAPI.ListBlockedIPs = ListBlockedIPs
+	relay.ManagementAPI.GrantAdmin = GrantAdmin
+	relay.ManagementAPI.RevokeAdmin = RevokeAdmin
+	relay.ManagementAPI.ListBannedEvents = ListBannedEvents
 	relay.ManagementAPI.RejectAPICall = append(relay.ManagementAPI.RejectAPICall,
 		func(ctx context.Context, mp nip86.MethodParams) (reject bool, msg string) {
 			auth := khatru.GetAuthed(ctx)
-			if !slices.Contains(config.Admins, auth) {
+			methods, isAdmin := management.Admins[auth]
+			if !isAdmin {
 				return true, "your are not an admin"
+			}
+
+			if !slices.Contains(methods, "*") {
+				if !slices.Contains(methods, mp.MethodName()) {
+					return true, "you don't have access to this method"
+				}
 			}
 
 			return false, ""
@@ -117,8 +164,11 @@ func main() {
 	mux := relay.Router()
 	mux.HandleFunc("GET /{$}", StaticViewHandler)
 
+	go runDiscovery()
+
 	log.Println("Relay running on port: ", config.RelayPort)
-	http.ListenAndServe(config.RelayPort, relay)
+	http.ListenAndServe(":3334", relay)
+	// http.ListenAndServe(config.RelayPort, relay)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
