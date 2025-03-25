@@ -1,9 +1,9 @@
 <p align="center"> 
-    <img alt="bunklay" src="./static/img/210maxi-logo-transparent.png" width="150" height="150" />
+    <img alt="bunklay" src="./static/img/logo-transp.png" width="150" height="150" />
 </p>
 
 <h1 align="center">
-The Bunklay only accepts bunker event!
+The Bunklay only accepts bunker events!
 </h1>
 
 <br/>
@@ -15,15 +15,14 @@ The Bunklay only accepts bunker event!
 ## Features
 
 - **Limits**: Only accept kind 24133.
-- **Database**: Keeps event for awhile on database for reliability.
+- **Database**: Keeps event for a while on database for reliability.
 - **Filter checking**: Only accept valide filters with at least on author and only one kind which MUST be 24133.
-- **NIP-86**: You can ban specific IP address or npubs.
 
 ## Installation
 
 ### Setup
 
-Here's an adapted **Setup** section considering that you'll push the base image to **Docker Registry**, allowing users to pull and run it easily.
+Here's an adapted **Setup** section, considering that you'll push the base image to **Docker Registry**, allowing users to pull and run it easily.
 
 ---
 
@@ -67,7 +66,7 @@ For a more structured deployment, use **Docker Compose**:
 
 1. **use `compose.yml`**
 
-use the exist compose file in the Bunklay directory
+use the existing compose file in the Bunklay directory
 
 
 2. **Run with Compose**
@@ -77,7 +76,7 @@ use the exist compose file in the Bunklay directory
 
 ## Configuration
 
-Modify the `env` variables in `.env` file, docker compose file or docker command to customize settings:
+Modify the `env` variables in the `.env` file, docker compose file, or docker command to customize settings:
 
 ### Relay Metadata
 
@@ -92,7 +91,7 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 ### Database And Events Config
 
 - `KEEP_IN_MINUTES` – Remove events that are KEEP_IN_MINUTES old. (default: `10 minutes`)
-- `ACCEPT_WINDOW_IN_MINUTES` – Only accept events from KEEP_IN_MINUTES past or future. (default: `1 minutes`)
+- `ACCEPT_WINDOW_IN_MINUTES` – Only accept events from KEEP_IN_MINUTES past or future. (default: `1 minute`)
 
 ### Storage & Working Directory
 
