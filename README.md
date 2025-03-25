@@ -33,7 +33,9 @@ Here is a list of DSRs developed by the Dezh:
 
 3. [Bunklay](./bunklay): A relay that only accept bunker related events.
     - **Limits**: Only accept kind 24133.
-
+    - **Database**: Keeps event for awhile on database for reliability.
+    - **Filter checking**: Only accept valide filters with at least on author and only one kind which MUST be 24133.
+    - **NIP-86**: You can ban specific IP address or npubs.
 
 > [!NOTE]
 > You can open your target relay and find full documentation there.

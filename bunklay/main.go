@@ -1,16 +1,21 @@
 package main
 
 import (
+	"context"
 	_ "embed"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"path"
 	"syscall"
 
+	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/khatru"
 	"github.com/fiatjaf/khatru/policies"
+	"github.com/nbd-wtf/go-nostr"
 )
 
 var (
@@ -22,7 +27,7 @@ var (
 )
 
 func main() {
-	log.SetPrefix("bunklay ")
+	log.SetPrefix("Bunklay ")
 	log.Printf("Running %s\n", StringVersion())
 
 	relay = khatru.NewRelay()
@@ -40,7 +45,48 @@ func main() {
 	relay.Info.Banner = config.RelayBanner
 	relay.Info.SupportedNIPs = []any{1, 46}
 
+	mainDB := &badger.BadgerBackend{
+		Path:     path.Join(config.WorkingDirectory, "database"),
+		MaxLimit: 100,
+	}
+	mainDB.Init()
+
+	relay.RejectCountFilter = append(relay.RejectCountFilter, func(ctx context.Context, filter nostr.Filter) (reject bool, msg string) {
+		return true, "blocked: we don't accept count filters"
+	})
+
+	relay.RejectFilter = append(relay.RejectFilter, func(ctx context.Context, filter nostr.Filter) (reject bool, msg string) {
+		if len(filter.Authors) == 0 || len(filter.Kinds) != 1 {
+			return true, "blocked: please add authors and kind 24133"
+		}
+
+		if filter.Kinds[0] != nostr.KindNostrConnect {
+			return true, "blocked: we only keep kind 24133"
+		}
+
+		return false, ""
+	})
+
 	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(true, 24133))
+
+	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
+		if !IsInTimeWindow(event.CreatedAt.Time().Unix(), config.AcceptEventsInRange) {
+			return true, fmt.Sprintf("invalid: we only accept event on %d minute time frame", config.AcceptEventsInRange)
+		}
+
+		return false, ""
+	})
+
+	relay.OnEphemeralEvent = append(relay.OnEphemeralEvent, func(ctx context.Context, event *nostr.Event) {
+		if err := mainDB.SaveEvent(ctx, event); err != nil {
+			log.Printf("can't store event: %s\nerror: %s\n", event.String(), err.Error())
+		}
+	})
+
+	relay.QueryEvents = append(relay.QueryEvents, mainDB.QueryEvents)
+	relay.DeleteEvent = append(relay.DeleteEvent, mainDB.DeleteEvent)
+
+	go cleanDatabase()
 
 	mux := relay.Router()
 	mux.HandleFunc("GET /{$}", StaticViewHandler)

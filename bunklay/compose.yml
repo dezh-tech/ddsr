@@ -16,6 +16,11 @@ services:
       RELAY_BANNER: "https://your-banner-url.png"
       RELAY_CONTACT: "https://dezh.tech"
       RELAY_PORT: ":3334"
+      WORKING_DIR: "bunklay_wd/"
+      KEEP_IN_MINUTES: 10
+      ACCEPT_WINDOW_IN_MINUTES: 1
+    volumes:
+      - bunklay_data:/app/bunklay_wd/
     networks:
       - bunklay_network
 

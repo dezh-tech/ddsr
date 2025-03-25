@@ -15,7 +15,12 @@ type Config struct {
 	RelayIcon        string `envconfig:"RELAY_ICON"`
 	RelayBanner      string `envconfig:"RELAY_BANNER"`
 
-	RelayPort string `envconfig:"RELAY_PORT"`
+	WorkingDirectory string   `envconfig:"WORKING_DIR"`
+	RelayPort        string   `envconfig:"RELAY_PORT"`
+	Admins           []string `envconfig:"ADMIN_PUBKEYS"`
+
+	KeepNotesFor        int `envconfig:"KEEP_IN_MINUTES"`
+	AcceptEventsInRange int `envconfig:"ACCEPT_WINDOW_IN_MINUTES"`
 }
 
 func LoadConfig() {

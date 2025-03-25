@@ -8,9 +8,16 @@ The Bunklay only accepts bunker event!
 
 <br/>
 
+## Screenshot
+
+<img alt="pages" src="./static/img/ss.png"/>
+
 ## Features
 
 - **Limits**: Only accept kind 24133.
+- **Database**: Keeps event for awhile on database for reliability.
+- **Filter checking**: Only accept valide filters with at least on author and only one kind which MUST be 24133.
+- **NIP-86**: You can ban specific IP address or npubs.
 
 ## Installation
 
@@ -46,6 +53,9 @@ The easiest way to run Bunklay is by using the prebuilt image:
    -e RELAY_BANNER="https://your-banner-url.png" \
    -e RELAY_CONTACT="https://dezh.tech" \
    -e RELAY_PORT=":3334" \
+   -e WORKING_DIR="bunklay_wd/" \
+   -e KEEP_IN_MINUTES=10 \
+   -e ACCEPT_WINDOW_IN_MINUTES=1 \
    dezhtech/bunklay
    ```
 
@@ -78,6 +88,15 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 - `RELAY_ICON` – URL to the relay's icon.
 - `RELAY_BANNER` – URL to the relay's banner image.
 - `RELAY_CONTACT` – Contact URL (e.g., `https://dezh.tech`).
+
+### Database And Events Config
+
+- `KEEP_IN_MINUTES` – Remove events that are KEEP_IN_MINUTES old. (default: `10 minutes`)
+- `ACCEPT_WINDOW_IN_MINUTES` – Only accept events from KEEP_IN_MINUTES past or future. (default: `1 minutes`)
+
+### Storage & Working Directory
+
+- `WORKING_DIR` – Configuration working directory (default: `bunklay_wd`).
 
 ### Networking & Ports
 
