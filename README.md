@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-Domain Specific Relays (DSR)
+Domain-Specific Relays (DSR)
 </h1>
 
 <br/>
@@ -15,9 +15,9 @@ This project is based on [Khatru](https://github.com/fiatjaf/khatru), [Event Sto
 Here is a list of DSRs developed by the Dezh:
 
 1. [Zapoli](./zapoli): A relay designed to used by [NIP-82](https://github.com/nostr-protocol/nips/pull/1336) clients.
-    - **NIP-50**: you can search between multiple software applications.
-    - **Blossom**: you can store software images, icons, and binaries.
-    - **NIP-86**: you can limit write access to software publishers.
+    - **NIP-50**: You can search between multiple software applications.
+    - **Blossom**: You can store software images, icons, and binaries.
+    - **NIP-86**: You can limit write access to software publishers.
 
 2. [210maxi](./210maxi): A relay that only accepts 210 character events, tuned for [NIP-B1](https://github.com/nostr-protocol/nips/pull/1710) feeds.
     - **Limits**: Only accept kind 25, 1111, 7, 5, 9734, 9735, 0, 3.
@@ -25,17 +25,16 @@ Here is a list of DSRs developed by the Dezh:
     - **NIP-86**: manageable with support of reporting. (WIP)
 
 3. [Pages](./pages): A relay that only keeps profiles and follow lists. You can simply resolve any pubkey from it. 
-    - **NIP-50**: you can search profiles.
+    - **NIP-50**: You can search profiles.
     - **Control**: You can directly send your profile update/deletion to it.
-    - **Discovery**: It scrape new profiles.
+    - **Discovery**: It scrapes new profiles.
     - **Blossom**: Optional Blossom server to host profile pictures and banners.
     - **NIP-86**: Ban specific profiles/Check reported ones.
 
 3. [Bunklay](./bunklay): A relay that only accept bunker related events.
     - **Limits**: Only accept kind 24133.
-    - **Database**: Keeps event for awhile on database for reliability.
+    - **Database**: Keeps event for a while on database for reliability.
     - **Filter checking**: Only accept valide filters with at least on author and only one kind which MUST be 24133.
-    - **NIP-86**: You can ban specific IP address or npubs.
 
 > [!NOTE]
 > You can open your target relay and find full documentation there.
