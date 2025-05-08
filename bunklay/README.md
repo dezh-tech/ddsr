@@ -41,7 +41,8 @@ The easiest way to run Bunklay is by using the prebuilt image:
    ```
 
 2. **Run 210Maxi with environment variables**
-   ```sh
+
+```sh
    docker run -d --name bunklay \
    -p 3334:3334 \
    -e RELAY_NAME="bunklay" \
@@ -56,7 +57,7 @@ The easiest way to run Bunklay is by using the prebuilt image:
    -e KEEP_IN_MINUTES=10 \
    -e ACCEPT_WINDOW_IN_MINUTES=1 \
    dezhtech/bunklay
-   ```
+```
 
 ---
 
