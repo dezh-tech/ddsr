@@ -14,9 +14,9 @@ The Bunklay only accepts bunker events!
 
 ## Features
 
-- **Limits**: Only accept kind 24133.
+- **Limits**: Only accept kind 24133 or 24135.
 - **Database**: Keeps event for a while on database for reliability.
-- **Filter checking**: Only accept valide filters with at least on author and only one kind which MUST be 24133.
+- **Filter checking**: Only accept filters with at least authors or #p and only with kinds which MUST be 24133 or 24135.
 
 ## Installation
 

@@ -56,18 +56,24 @@ func main() {
 	})
 
 	relay.RejectFilter = append(relay.RejectFilter, func(ctx context.Context, filter nostr.Filter) (reject bool, msg string) {
-		if len(filter.Authors) == 0 || len(filter.Kinds) != 1 {
-			return true, "blocked: please add authors and kind 24133"
+		if len(filter.Kinds) == 0 {
+			return true, "blocked: please add kind 24133 or 24135"
 		}
 
-		if filter.Kinds[0] != nostr.KindNostrConnect {
-			return true, "blocked: we only keep kind 24133"
+		if len(filter.Authors) == 0 && len(filter.Tags["p"]) == 0 {
+			return true, "blocked: please add authors or #p"
+		}
+
+    for _, v := range filter.Kinds {
+			if v != 24133 && v != 24135 {
+				return true, "blocked: we only keep kind 24133 or 24135"
+			}
 		}
 
 		return false, ""
 	})
 
-	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(true, 24133))
+	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(true, 24133, 24135))
 
 	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
 		if !IsInTimeWindow(event.CreatedAt.Time().Unix(), config.AcceptEventsInRange) {
