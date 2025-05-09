@@ -1,5 +1,5 @@
 <p align="center"> 
-    <img alt="bunklay" src="./static/img/logo-transp.png" width="150" height="150" />
+    <img alt="nwclay" src="./static/img/logo-transp.png" width="150" height="150" />
 </p>
 
 <h1 align="center">
@@ -10,7 +10,7 @@ The NWCLay only accepts NWC events!
 
 ## Screenshot
 
-<img alt="pages" src="./static/img/ss.png"/>
+<img alt="nwclay" src="./static/img/ss.png"/>
 
 ## Features
 
@@ -66,7 +66,7 @@ For a more structured deployment, use **Docker Compose**:
 
 1. **use `compose.yml`**
 
-use the existing compose file in the Bunklay directory
+use the existing compose file in the NWCLay directory
 
 
 2. **Run with Compose**
@@ -80,7 +80,7 @@ Modify the `env` variables in the `.env` file, docker compose file, or docker co
 
 ### Relay Metadata
 
-- `RELAY_NAME` – The name of the relay (default: `210Maxi`).
+- `RELAY_NAME` – The name of the relay (default: `NWCLay`).
 - `RELAY_PUBKEY` – The owner's hex key (convert `npub` to hex [here](https://nostrcheck.me/converter/)).
 - `RELAY_DESCRIPTION` – A short description of the relay.
 - `RELAY_URL` – WebSocket URL for the relay (e.g., `wss://abc.com`).

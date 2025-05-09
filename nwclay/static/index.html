@@ -11,7 +11,7 @@
         body {
             font-family: "Inter", sans-serif;
             min-height: 100vh;
-            background: linear-gradient(to right, #f47f2f, #ffffff);
+            background: linear-gradient(to right, #472459, #faa82c);
         }
     </style>
 </head>
@@ -22,17 +22,19 @@
                 <a href="{{.Icon}}">
                     <img src="{{.Icon}}" class="w-24 h-24 rounded-full border-2 border-white mb-2" />
                 </a>
-                <h1 class="text-3xl font-bold text-[#f47f2f]">{{.Name}}</h1>
-                <p class="text-lg text-black-300">{{.Description}}</p>
+                <h1 class="text-3xl font-bold" style="color: #472459;">{{.Name}}</h1>
+                <p class="text-lg" style="color: #472459;">{{.Description}}</p>
             </div>
 
             <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-2xl font-bold text-[#f47f2f] mb-4">Contact Information</h2>
+                <h2 class="text-2xl font-bold mb-4" style="color: #faa82c;">Contact Information</h2>
                 <table class="w-full">
                     <tbody>
                         <tr>
                             <td class="font-semibold">Pubkey:</td>
-                            <td><a href="nostr:{{.PubKey}}" class="text-[#f47f2f] hover:underline">Operator Nostr</a></td>
+                            <td>
+                                <a href="nostr:{{.PubKey}}" class="hover:underline" style="color: #faa82c;">Operator Nostr</a>
+                            </td>
                         </tr>
                         <tr>
                             <td class="font-semibold">Contact:</td>
@@ -43,12 +45,14 @@
             </div>
 
             <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-2xl font-bold text-[#f47f2f] mb-4">Software</h2>
+                <h2 class="text-2xl font-bold mb-4" style="color: #faa82c;">Software</h2>
                 <table class="w-full">
                     <tbody>
                         <tr>
                             <td class="font-semibold">Software:</td>
-                            <td><a href="https://github.com/dezh-tech/ddsr" class="text-[#f47f2f] hover:underline">Bunklay</a></td>
+                            <td>
+                                <a href="https://github.com/dezh-tech/ddsr" class="hover:underline" style="color: #faa82c;">NWCLay</a>
+                            </td>
                         </tr>
                         <tr>
                             <td class="font-semibold">Version:</td>
@@ -65,8 +69,8 @@
     </div>
 
     <footer class="w-full text-center py-6 bg-gray-800 mt-auto">
-        <p class="text-lg text-gray-400 mb-2">
-            Please use a <a href="https://github.com/aljazceru/awesome-nostr#clients" class="text-[#f47f2f] hover:text-[#966957] underline">Nostr bunker/client</a> to connect.
+        <p class="text-lg mb-2" style="color: #ccc;">
+            Please use a <a href="https://github.com/aljazceru/awesome-nostr#clients" class="hover:underline" style="color: #faa82c;">Nostr wallet Connect Provider/Client</a> to connect.
         </p>
     </footer>
 </body>

@@ -39,16 +39,3 @@ func cleanDatabase() {
 		}
 	}
 }
-
-// todo:::
-// func updateNIP11() {
-// 	ticker := time.NewTicker(time.Duration(config.AcceptEventsInRange) * time.Minute)
-// 	defer ticker.Stop()
-
-// 	for range ticker.C {
-// 		now := time.Now()
-
-// 		startTime := now.Add(time.Duration(-config.AcceptEventsInRange) * time.Minute)
-// 		endTime := now.Add(time.Duration(config.AcceptEventsInRange) * time.Minute)
-// 	}
-// }

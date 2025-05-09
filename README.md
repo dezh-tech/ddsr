@@ -34,7 +34,12 @@ Here is a list of DSRs developed by the Dezh:
 3. [Bunklay](./bunklay): A relay that only accept bunker related events.
     - **Limits**: Only accept kind 24133.
     - **Database**: Keeps event for a while on database for reliability.
-    - **Filter checking**: Only accept valide filters with at least on author and only one kind which MUST be 24133.
+    - **Filter checking**: Only accept valid filters with at least on author or #p and only kins matching Bunker protocol.
+
+3. [NWCLay](./nwclay/): A relay that only accept NWC related events.
+    - **Limits**: Only accept kinds from NWC spec.
+    - **Database**: Keeps event for a while on database for reliability.
+    - **Filter checking**: Only accept valid filters with at least authors or #p and only kinds matching NWC.
 
 > [!NOTE]
 > You can open your target relay and find full documentation there.

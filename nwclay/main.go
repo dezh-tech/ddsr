@@ -42,7 +42,7 @@ func main() {
 	relay.Info.Contact = config.RelayContact
 	relay.Info.URL = config.RelayURL
 	relay.Info.Banner = config.RelayBanner
-	relay.Info.SupportedNIPs = []any{1, 46}
+	relay.Info.SupportedNIPs = []any{1, 47}
 
 	mainDB := &badger.BadgerBackend{
 		Path:     path.Join(config.WorkingDirectory, "database"),

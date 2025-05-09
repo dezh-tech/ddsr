@@ -81,7 +81,7 @@ Modify the `env` variables in the `.env` file, docker compose file, or docker co
 
 ### Relay Metadata
 
-- `RELAY_NAME` – The name of the relay (default: `210Maxi`).
+- `RELAY_NAME` – The name of the relay (default: `bunklay`).
 - `RELAY_PUBKEY` – The owner's hex key (convert `npub` to hex [here](https://nostrcheck.me/converter/)).
 - `RELAY_DESCRIPTION` – A short description of the relay.
 - `RELAY_URL` – WebSocket URL for the relay (e.g., `wss://abc.com`).
