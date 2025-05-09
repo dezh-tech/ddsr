@@ -14,7 +14,6 @@ import (
 
 	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/khatru"
-	"github.com/fiatjaf/khatru/policies"
 	"github.com/nbd-wtf/go-nostr"
 )
 
@@ -64,7 +63,7 @@ func main() {
 			return true, "blocked: please add authors or #p"
 		}
 
-    for _, v := range filter.Kinds {
+		for _, v := range filter.Kinds {
 			if v != 24133 && v != 24135 {
 				return true, "blocked: we only keep kind 24133 or 24135"
 			}
@@ -73,9 +72,11 @@ func main() {
 		return false, ""
 	})
 
-	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(true, 24133, 24135))
-
 	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
+		if (event.Kind != 24133) && (event.Kind != 24135) {
+			return true, "blocked: only kind 24133 and 24135 is accepted"
+		}
+
 		if !IsInTimeWindow(event.CreatedAt.Time().Unix(), config.AcceptEventsInRange) {
 			return true, fmt.Sprintf("invalid: we only accept event on %d minute time frame", config.AcceptEventsInRange)
 		}
