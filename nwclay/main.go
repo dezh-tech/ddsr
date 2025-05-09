@@ -14,7 +14,6 @@ import (
 
 	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/khatru"
-	"github.com/fiatjaf/khatru/policies"
 	"github.com/nbd-wtf/go-nostr"
 )
 
