@@ -64,7 +64,7 @@ func main() {
 			return true, "blocked: please add authors or #p"
 		}
 
-    for _, v := range filter.Kinds {
+		for _, v := range filter.Kinds {
 			if v != 13194 && v != 23194 && v != 23195 && v != 23196 {
 				return true, "blocked: we only keep kind 13194 or 23194 or 23195 or 23196"
 			}
