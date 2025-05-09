@@ -89,8 +89,10 @@ func main() {
 		}
 	})
 
+	relay.StoreEvent = append(relay.StoreEvent, mainDB.SaveEvent)
 	relay.QueryEvents = append(relay.QueryEvents, mainDB.QueryEvents)
 	relay.DeleteEvent = append(relay.DeleteEvent, mainDB.DeleteEvent)
+	relay.ReplaceEvent = append(relay.ReplaceEvent, mainDB.ReplaceEvent)
 
 	go cleanDatabase()
 
