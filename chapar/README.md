@@ -1,24 +1,23 @@
 <p align="center"> 
-    <img alt="210maxi" src="./static/img/210maxi-logo-transparent.png" width="150" height="150" />
+    <img alt="chapar" src="./static/img/logo-transp.png" width="150" height="150" />
 </p>
 
 <h1 align="center">
-A nostr relay that only accepts 210 character events.
+A nostr relay that only accepts chat app events!
 </h1>
 
 <br/>
 
-The 210Maxi relay is a relay that forces events content to be at most 210 chars. Which is suitable for NIP-B1 feeds.
+The Chapar is designed only for chat apps based on nostr.
 
 ## Screenshot
 
-<img alt="210maxi" src="./static/img/screenshot.png"/>
+<img alt="chapar" src="./static/img/ss.png"/>
 
 ## Features
 
-- **Limited Kinds**: Only accepts kinds related and accepted in NIP-B1.
-- **NIP-50: Search**: Allow to search on 210 char events.
-- **Limited chars**: it checks each kind 25 and 1111 to have at most 210 char (not bytes).
+- **Limited Kinds**: Only accepts kinds related and accepted in NIP-59.
+- **Limited queries**: You need to auth before reading any events and you can only read events related to you.
 
 ## Installation
 
@@ -34,28 +33,28 @@ Here's an adapted **Setup** section considering that you'll push the base image 
 
 #### **Option 1: Use Prebuilt Docker Image (Recommended)**
 
-The easiest way to run 210Maxi is by using the prebuilt image:
+The easiest way to run Chapar is by using the prebuilt image:
 
 1. **Pull the latest image**
 
    ```sh
-   docker pull dezhtech/210maxi
+   docker pull dezhtech/chapar
    ```
 
-2. **Run 210Maxi with environment variables**
+2. **Run Chapar with environment variables**
    ```sh
-   docker run -d --name 210maxi \
+   docker run -d --name chapar \
    -p 3334:3334 \
    -e RELAY_NAME="21maxi" \
    -e RELAY_PUBKEY="your_pubkey" \
-   -e RELAY_DESCRIPTION="Only accepts 210 char events" \
-   -e RELAY_URL="wss://210maxi.com" \
+   -e RELAY_DESCRIPTION="We only accept kin 1059 events!" \
+   -e RELAY_URL="wss://chapar.com" \
    -e RELAY_ICON="https://your-icon-url.png" \
    -e RELAY_BANNER="https://your-banner-url.png" \
    -e RELAY_CONTACT="https://dezh.tech" \
-   -e WORKING_DIR="210maxi_wd/" \
-   -e RELAY_PORT=":2100" \
-   dezhtech/210maxi
+   -e WORKING_DIR="chapar_wd/" \
+   -e RELAY_PORT=":1717" \
+   dezhtech/chapar
    ```
 
 ---
@@ -66,7 +65,7 @@ For a more structured deployment, use **Docker Compose**:
 
 1. **use `compose.yml`**
 
-use the exist compose file in the 210Maxi directory
+use the exist compose file in the Chapar directory
 
 
 2. **Run with Compose**
@@ -80,7 +79,7 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 
 ### Relay Metadata
 
-- `RELAY_NAME` – The name of the relay (default: `210Maxi`).
+- `RELAY_NAME` – The name of the relay (default: `chapar`).
 - `RELAY_PUBKEY` – The owner's hex key (convert `npub` to hex [here](https://nostrcheck.me/converter/)).
 - `RELAY_DESCRIPTION` – A short description of the relay.
 - `RELAY_URL` – WebSocket URL for the relay (e.g., `wss://abc.com`).
@@ -90,11 +89,11 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 
 ### Storage & Working Directory
 
-- `WORKING_DIR` – Configuration working directory (default: `210maxi_wd`).
+- `WORKING_DIR` – Configuration working directory (default: `chapar_wd`).
 
 ### Networking & Ports
 
-- `RELAY_PORT` – Port on which the relay listens (default: `:2100`).
+- `RELAY_PORT` – Port on which the relay listens (default: `:1717`).
 
 ## Contributing
 

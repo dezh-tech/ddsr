@@ -31,15 +31,19 @@ Here is a list of DSRs developed by the Dezh:
     - **Blossom**: Optional Blossom server to host profile pictures and banners.
     - **NIP-86**: Ban specific profiles/Check reported ones.
 
-3. [Bunklay](./bunklay): A relay that only accept bunker related events.
+4. [Bunklay](./bunklay): A relay that only accept bunker related events.
     - **Limits**: Only accept kind 24133.
     - **Database**: Keeps event for a while on database for reliability.
     - **Filter checking**: Only accept valid filters with at least on author or #p and only kins matching Bunker protocol.
 
-3. [NWCLay](./nwclay/): A relay that only accept NWC related events.
+5. [NWCLay](./nwclay/): A relay that only accept NWC related events.
     - **Limits**: Only accept kinds from NWC spec.
     - **Database**: Keeps event for a while on database for reliability.
     - **Filter checking**: Only accept valid filters with at least authors or #p and only kinds matching NWC.
+
+6. [Chapar](./chapar/): A relay that only accept chat app messages.
+    - **Limited Kinds**: Only accepts kinds related and accepted in NIP-59.
+    - **Limited queries**: You need to auth before reading any events and you can only read events related to you.
 
 > [!NOTE]
 > You can open your target relay and find full documentation there.
