@@ -73,8 +73,6 @@ func main() {
 		return false, ""
 	})
 
-	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(true, 13194, 23194, 23195, 23196))
-
 	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
 		if (event.Kind != 13194) && (event.Kind != 23194) && (event.Kind != 23195) && (event.Kind != 23196) {
 			return true, "blocked: only kind 13194, 23194, 23195 and 23196 is accepted"
