@@ -28,8 +28,7 @@ Here is a list of DSRs developed by the Dezh:
     - **NIP-50**: You can search profiles.
     - **Control**: You can directly send your profile update/deletion to it.
     - **Discovery**: It scrapes new profiles.
-    - **Blossom**: Optional Blossom server to host profile pictures and banners.
-    - **NIP-86**: Ban specific profiles/Check reported ones.
+    - **Admin and Moderators**: - Admins can call management APIs (NIP-86) and moderators can send reporting events (kind 1984) to remove a profile from relay.
 
 4. [Bunklay](./bunklay): A relay that only accepts bunker-related events.
     - **Limits**: Only accept kind 24133.

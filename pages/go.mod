@@ -3,16 +3,17 @@ module github.com/dezh-tech/ddsr/pages
 go 1.24.1
 
 require (
-	github.com/fiatjaf/eventstore v0.16.4
+	github.com/fiatjaf/eventstore v0.16.7
 	github.com/fiatjaf/khatru v0.17.4
 	github.com/kehiy/blobstore v0.1.2
 	github.com/kelseyhightower/envconfig v1.4.0
-	github.com/nbd-wtf/go-nostr v0.51.6
+	github.com/nbd-wtf/go-nostr v0.51.8
 )
 
 require (
 	fiatjaf.com/lib v0.3.1 // indirect
 	github.com/ImVexed/fasturl v0.0.0-20230304231329-4e41488060f3 // indirect
+	github.com/PowerDNS/lmdb-go v1.9.3 // indirect
 	github.com/RoaringBitmap/roaring v1.9.4 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
 	github.com/axiomhq/hyperloglog v0.2.5 // indirect
@@ -70,10 +71,10 @@ require (
 	go.opentelemetry.io/otel v1.35.0 // indirect
 	go.opentelemetry.io/otel/metric v1.35.0 // indirect
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
-	golang.org/x/arch v0.15.0 // indirect
+	golang.org/x/arch v0.16.0 // indirect
 	golang.org/x/exp v0.0.0-20250305212735-054e65f0b394 // indirect
 	golang.org/x/net v0.38.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 )

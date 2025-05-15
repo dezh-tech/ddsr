@@ -20,6 +20,7 @@ type Config struct {
 	RelayPort string `envconfig:"RELAY_PORT"`
 
 	Admins          []string `envconfig:"ADMIN_PUBKEYS"`
+	Moderators      []string `envconfig:"MODERATOR_PUBKEYS"`
 	DiscoveryRelays []string `envconfig:"DISC_RELAYS"`
 }
 

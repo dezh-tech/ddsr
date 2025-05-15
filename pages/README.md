@@ -17,7 +17,7 @@ A Nostr relay only for profiles!
 - NIP-50: you can search profiles.
 - You can directly send your profile update/deletion to it.
 - It scrape new profiles.
-- Optional Blossom server to host profile pictures and banners.
+- Admins can call management APIs and moderators can send reporting events (kind 1984) to remove a profile from relay.
 - NIP-86: Ban specific profiles/Check reported ones.
 
 
@@ -57,6 +57,7 @@ The easiest way to run Pages is by using the prebuilt image:
    -e WORKING_DIR="pages_wd/" \
    -e RELAY_PORT=":3334" \
    -e ADMIN_PUBKEYS="" \
+   -e MODERATOR_PUBKEYS="" \
    -e DISC_RELAYS="nos.lol,purplepag.es,relay.nostr.lol,jellyfish.land,relay.primal.net,nostr.mom,nostr.wine,nostr.land" \
    dezhtech/pages
    ```
@@ -100,7 +101,8 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 
 ### Admin Access Control
 
-- `ADMIN_PUBKEYS` – Comma-separated list of allowed public keys.
+- `ADMIN_PUBKEYS` – Comma-separated list of allowed public keys that can call management APIs.
+- `MODERATORS_PUBKEYS` – Comma-separated list of allowed public keys that can remove events from db by sending kind 1984 events.
 
 ## Contributing
 
