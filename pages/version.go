@@ -7,12 +7,12 @@ import "fmt"
 var (
 	major = 1
 	minor = 0
-	patch = 3
+	patch = 5
 	meta  = ""
 )
 
 func StringVersion() string {
-	v := fmt.Sprintf("pages - %d.%d.%d", major, minor, patch)
+	v := fmt.Sprintf("Pages - %d.%d.%d", major, minor, patch)
 
 	if meta != "" {
 		v = fmt.Sprintf("%s-%s", v, meta)

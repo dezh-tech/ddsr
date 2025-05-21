@@ -12,11 +12,11 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
-# Build a statically linked binary compatible with Alpine
+# Build a statically linked binary compatible with Ubuntu
 RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o pages
 
 # Use a minimal base image
-FROM alpine:latest
+FROM ubuntu:latest
 
 # Set working directory
 WORKDIR /app

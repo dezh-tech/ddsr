@@ -167,8 +167,7 @@ func main() {
 	go runDiscovery()
 
 	log.Println("Relay running on port: ", config.RelayPort)
-	http.ListenAndServe(":3334", relay)
-	// http.ListenAndServe(config.RelayPort, relay)
+	http.ListenAndServe(config.RelayPort, relay)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
