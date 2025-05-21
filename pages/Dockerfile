@@ -21,9 +21,6 @@ FROM ubuntu:latest
 # Set working directory
 WORKDIR /app
 
-# Install CA certificates (if needed for HTTPS calls)
-RUN apk add --no-cache ca-certificates
-
 # Copy the built binary from the builder stage
 COPY --from=builder /app/pages .
 
