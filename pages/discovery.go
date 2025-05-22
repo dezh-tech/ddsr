@@ -10,7 +10,7 @@ import (
 var (
 	filters = []nostr.Filter{
 		{
-			Kinds: []int{0, 3, 5, 10002, 1984},
+			Kinds: []int{0, 3, 5, 10002, 1984, 10063},
 		},
 	}
 

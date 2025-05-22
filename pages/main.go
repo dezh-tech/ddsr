@@ -13,7 +13,7 @@ import (
 	"syscall"
 
 	"github.com/fiatjaf/eventstore/bluge"
-	"github.com/fiatjaf/eventstore/lmdb"
+	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/khatru"
 	"github.com/fiatjaf/khatru/policies"
 	"github.com/nbd-wtf/go-nostr"
@@ -47,7 +47,7 @@ func main() {
 	relay.Info.Banner = config.RelayBanner
 	relay.Info.AddSupportedNIPs([]int{50, 45})
 
-	persistStore := &lmdb.LMDBBackend{
+	persistStore := &badger.BadgerBackend{
 		Path: path.Join(config.WorkingDirectory, "database"),
 	}
 	persistStore.Init()
@@ -68,8 +68,8 @@ func main() {
 		defer management.Unlock()
 
 		if event.Kind != 10002 || event.Kind != 0 ||
-			event.Kind != 3 || event.Kind != 5 || event.Kind != 1984 {
-			return true, "blocked: we only accept kinds: 0, 3, 5, 1984, 10002"
+			event.Kind != 3 || event.Kind != 5 || event.Kind != 1984 || event.Kind != 10063 {
+			return true, "blocked: we only accept kinds: 0, 3, 5, 1984, 10002, 10063"
 		}
 
 		_, bannedPubkey := management.BannedPubkeys[event.PubKey]

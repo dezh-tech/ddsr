@@ -7,7 +7,7 @@ import "fmt"
 var (
 	major = 1
 	minor = 0
-	patch = 5
+	patch = 6
 	meta  = ""
 )
 

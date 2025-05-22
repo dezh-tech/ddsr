@@ -12,14 +12,17 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
-# Build a statically linked binary compatible with Ubuntu
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o pages
+# Build a statically linked binary compatible with Alpine
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o pages
 
 # Use a minimal base image
-FROM ubuntu:latest
+FROM alpine:latest
 
 # Set working directory
 WORKDIR /app
+
+# Install CA certificates (if needed for HTTPS calls)
+RUN apk add --no-cache ca-certificates
 
 # Copy the built binary from the builder stage
 COPY --from=builder /app/pages .
