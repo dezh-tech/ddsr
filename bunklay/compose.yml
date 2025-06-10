@@ -25,4 +25,4 @@ services:
       - bunklay_network
 
 volumes:
-  bunklay_network:
+  bunklay_data:
