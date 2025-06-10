@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  bunklay:
+    container_name: nwclay
+    image: dezhtech/nwclay:latest
+    restart: unless-stopped
+    ports:
+      - "3334:3334"
+    environment:
+      RELAY_NAME: "nwclay"
+      RELAY_PUBKEY: "your_pubkey"
+      RELAY_DESCRIPTION: "A Nostr relay for nwc apps."
+      RELAY_URL: "wss://abc.com"
+      RELAY_ICON: "https://file.nostrmedia.com/f/badbdda507572b397852048ea74f2ef3ad92b1aac07c3d4e1dec174e8cdc962a/444df8efbe4a4b76c51c35954f641a8c616ed446a38e3757aa1fce959122ccc7.png"
+      RELAY_BANNER: "https://file.nostrmedia.com/f/badbdda507572b397852048ea74f2ef3ad92b1aac07c3d4e1dec174e8cdc962a/d0a146591ca359480ecfa3938efd98d8efcadd00e350f3ca0eb93fc07cb437b4.png"
+      RELAY_CONTACT: "https://dezh.tech"
+      RELAY_PORT: ":3334"
+      WORKING_DIR: "nwclay_wd/"
+      KEEP_IN_MINUTES: 10
+      ACCEPT_WINDOW_IN_MINUTES: 1
+    volumes:
+      - nwclay_data:/app/nwclay_wd/
+    networks:
+      - nwclay_network
+
+volumes:
+  nwclay_network:

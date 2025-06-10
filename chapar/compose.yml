@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  zapoli:
+    container_name: chapar
+    image: dezhtech/chapar:latest
+    restart: unless-stopped
+    ports:
+      - "1717:1717"
+    environment:
+      RELAY_NAME: "chapar"
+      RELAY_PUBKEY: "your_pubkey"
+      RELAY_DESCRIPTION: "We only accept kin 1059 events!"
+      RELAY_URL: "wss://chapar.com"
+      RELAY_ICON: "https://your-icon-url.png"
+      RELAY_BANNER: "https://your-banner-url.png"
+      RELAY_CONTACT: "https://dezh.tech"
+      WORKING_DIR: "chapar_wd/"
+      RELAY_PORT: ":1717"
+    volumes:
+      - chapar_data:/app/chapar_wd/
+    networks:
+      - chapar_network
+
+volumes:
+  chapar_network:

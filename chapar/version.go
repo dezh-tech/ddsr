@@ -6,13 +6,13 @@ import "fmt"
 // see: http://semver.org
 var (
 	major = 1
-	minor = 1
+	minor = 0
 	patch = 0
 	meta  = ""
 )
 
 func StringVersion() string {
-	v := fmt.Sprintf("Bunklay - %d.%d.%d", major, minor, patch)
+	v := fmt.Sprintf("Chapar - %d.%d.%d", major, minor, patch)
 
 	if meta != "" {
 		v = fmt.Sprintf("%s-%s", v, meta)

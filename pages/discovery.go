@@ -10,7 +10,7 @@ import (
 var (
 	filters = []nostr.Filter{
 		{
-			Kinds: []int{0, 3, 5, 10002},
+			Kinds: []int{0, 3, 5, 10002, 1984, 10063},
 		},
 	}
 
@@ -45,6 +45,13 @@ func collect(r *nostr.Relay) {
 	if err != nil {
 		log.Printf("error on subscribing to: %s\nerror:\n", r.URL, err.Error())
 	}
+
+	// TODO::: retry to connect if reason is timeout.
+	go func() {
+		for rs := range sub.ClosedReason {
+			log.Printf("Connection to %s closed\nReason: %s", r.URL, rs)
+		}
+	}()
 
 	for ev := range sub.Events {
 		reject := false

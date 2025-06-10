@@ -18,6 +18,7 @@ services:
       WORKING_DIR: "pages_wd/"
       RELAY_PORT: ":3334"
       ADMIN_PUBKEYS: ""
+      MODERATOR_PUBKEYS: ""
       DISC_RELAYS: "nos.lol,purplepag.es,relay.nostr.lol,jellyfish.land,relay.primal.net,nostr.mom,nostr.wine,nostr.land"
     volumes:
       - pages_data:/app/pages_wd/

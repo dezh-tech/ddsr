@@ -12,12 +12,10 @@ import (
 	"slices"
 	"syscall"
 
-	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/eventstore/bluge"
+	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/khatru"
-	"github.com/fiatjaf/khatru/blossom"
 	"github.com/fiatjaf/khatru/policies"
-	"github.com/kehiy/blobstore/disk"
 	"github.com/nbd-wtf/go-nostr"
 	"github.com/nbd-wtf/go-nostr/nip86"
 )
@@ -31,19 +29,12 @@ var (
 )
 
 func main() {
-	log.SetPrefix("pages ")
+	log.SetPrefix("Pages ")
 	log.Printf("Running %s\n", StringVersion())
 
 	relay = khatru.NewRelay()
 
 	LoadConfig()
-
-	config.DiscoveryRelays = []string{
-		"nos.lol", "purplepag.es",
-		"jellyfish.land", "relay.primal.net", "nostr.mom", "nostr.wine", "nostr.land",
-	}
-	config.WorkingDirectory = "pages_wd/"
-	config.RelayIcon = "https://file.nostrmedia.com/f/bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5/517788c462ab4f1ea8405ca09247ad35e5fdb462282aacc18e258896ded12bc4.png"
 
 	relay.Info.Name = config.RelayName
 	relay.Info.Software = "https://github.com/dezh-tech/ddsr"
@@ -72,9 +63,14 @@ func main() {
 	relay.CountEvents = append(relay.CountEvents, persistStore.CountEvents)
 	relay.DeleteEvent = append(relay.DeleteEvent, persistStore.DeleteEvent, searchDB.DeleteEvent)
 	relay.ReplaceEvent = append(relay.ReplaceEvent, persistStore.ReplaceEvent, searchDB.ReplaceEvent)
-	relay.RejectEvent = append(relay.RejectEvent, func(_ context.Context, event *nostr.Event) (reject bool, msg string) {
+	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
 		management.Lock()
 		defer management.Unlock()
+
+		if event.Kind != 10002 || event.Kind != 0 ||
+			event.Kind != 3 || event.Kind != 5 || event.Kind != 1984 || event.Kind != 10063 {
+			return true, "blocked: we only accept kinds: 0, 3, 5, 1984, 10002, 10063"
+		}
 
 		_, bannedPubkey := management.BannedPubkeys[event.PubKey]
 		if bannedPubkey {
@@ -86,39 +82,43 @@ func main() {
 			return true, "blocked: event is blocked"
 		}
 
+		rjct, message := policies.ValidateKind(ctx, event)
+		if rjct {
+			return rjct, message
+		}
+
 		return false, ""
 	})
 
-	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
-		return policies.ValidateKind(ctx, event)
-	})
-
-	relay.RejectEvent = append(relay.RejectEvent, policies.RestrictToSpecifiedKinds(false, 0, 3, 5, 10002))
-
-	// blossom
-	bl := blossom.New(relay, config.RelayURL)
-	bl.Store = blossom.EventStoreBlobIndexWrapper{Store: persistStore, ServiceURL: bl.ServiceURL}
-
-	if !PathExists(path.Join(config.WorkingDirectory, "blossom")) {
-		if err := Mkdir(path.Join(config.WorkingDirectory, "blossom")); err != nil {
-			log.Fatalf("can't make blossom directory: %s", err.Error())
-		}
-	}
-	blobStorage := disk.New(path.Join(config.WorkingDirectory, "blossom"))
-
-	bl.StoreBlob = append(bl.StoreBlob, blobStorage.Store)
-	bl.LoadBlob = append(bl.LoadBlob, blobStorage.Load)
-	bl.DeleteBlob = append(bl.DeleteBlob, blobStorage.Delete)
-	bl.RejectUpload = append(bl.RejectUpload, func(_ context.Context, auth *nostr.Event, _ int, _ string) (bool, string, int) {
+	relay.StoreEvent = append(relay.StoreEvent, func(ctx context.Context, event *nostr.Event) error {
 		management.Lock()
 		defer management.Unlock()
 
-		_, banned := management.BannedPubkeys[auth.PubKey]
-		if banned {
-			return true, "blocked: you are blacklisted", http.StatusUnauthorized
+		if event.Kind == nostr.KindReporting {
+			for _, t := range event.Tags {
+				if len(t) < 2 {
+					continue
+				}
+
+				if t[0] == "e" && t[1] != "" {
+					if len(t[1]) == 64 {
+						management.ModerationEvents[t[1]] = event.Content
+					}
+				}
+
+				if slices.Contains(config.Moderators, event.PubKey) {
+					for _, d := range relay.DeleteEvent {
+						if err := d(ctx, event); err != nil {
+							return err
+						}
+					}
+				}
+			}
 		}
 
-		return false, "", http.StatusOK
+		UpdateManagement()
+
+		return nil
 	})
 
 	LoadManagement()
@@ -167,8 +167,7 @@ func main() {
 	go runDiscovery()
 
 	log.Println("Relay running on port: ", config.RelayPort)
-	http.ListenAndServe(":3334", relay)
-	// http.ListenAndServe(config.RelayPort, relay)
+	http.ListenAndServe(config.RelayPort, relay)
 
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

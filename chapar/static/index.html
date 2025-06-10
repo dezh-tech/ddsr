@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{{.Icon}}" type="image/x-icon" />
+    <title>{{.Name}}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+        body {
+            font-family: "Inter", sans-serif;
+            min-height: 100vh;
+            /* Use a solid background with the new color */
+            background-color: #1f2f3c;
+        }
+    </style>
+</head>
+<body class="text-white flex flex-col">
+    <div class="flex-grow flex flex-col items-center justify-center px-4">
+        <div class="max-w-2xl w-full">
+            <!-- Header Section -->
+            <div class="flex flex-col items-center justify-center mb-8 text-center">
+                <a href="{{.Icon}}">
+                    <img src="{{.Icon}}" class="w-24 h-24 rounded-full border-2 border-white mb-2" />
+                </a>
+                <!-- Title with color #ffffff for high contrast -->
+                <h1 class="text-3xl font-bold" style="color: #ffffff;">{{.Name}}</h1>
+                <!-- Description with color #ffffff -->
+                <p class="text-lg" style="color: #ffffff;">{{.Description}}</p>
+            </div>
+
+            <!-- Contact Information Section -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-2xl font-bold mb-4" style="color: #ffffff;">Contact Information</h2>
+                <table class="w-full">
+                    <tbody>
+                        <tr>
+                            <td class="font-semibold" style="color: #ffffff;">Pubkey:</td>
+                            <td>
+                                <a href="nostr:{{.PubKey}}" class="hover:underline" style="color: #ffffff;">Operator Nostr</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold" style="color: #ffffff;">Contact:</td>
+                            <td>{{.Contact}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Software Section -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-2xl font-bold mb-4" style="color: #ffffff;">Software</h2>
+                <table class="w-full">
+                    <tbody>
+                        <tr>
+                            <td class="font-semibold" style="color: #ffffff;">Software:</td>
+                            <td>
+                                <a href="https://github.com/dezh-tech/ddsr" class="hover:underline" style="color: #ffffff;">Chapar</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold" style="color: #ffffff;">Version:</td>
+                            <td>{{.Version}}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold" style="color: #ffffff;">Supported NIPs:</td>
+                            <td>{{.SupportedNIPs}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full text-center py-6 bg-gray-800 mt-auto">
+        <p class="text-lg mb-2" style="color: #ffffff;">
+            Please use a <a href="https://github.com/aljazceru/awesome-nostr#clients" class="hover:underline" style="color: #ffffff;">Nostr Chat App</a> to connect.
+        </p>
+    </footer>
+</body>
+</html>
