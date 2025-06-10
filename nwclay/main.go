@@ -59,8 +59,8 @@ func main() {
 			return true, "blocked: please add kind 13194 or 23194 or 23195 or 23196"
 		}
 
-		if len(filter.Authors) == 0 && len(filter.Tags["p"]) == 0 {
-			return true, "blocked: please add authors or #p"
+		if len(filter.Authors) == 0 && len(filter.Tags["p"]) == 0 && len(filter.Tags["e"]) == 0 {
+			return true, "blocked: please add authors or #p or #e"
 		}
 
 		for _, v := range filter.Kinds {

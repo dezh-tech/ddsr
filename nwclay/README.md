@@ -16,7 +16,7 @@ The NWCLay only accepts NWC events!
 
 - **Limits**: Only accept kinds from NWC spec.
 - **Database**: Keeps event for a while on database for reliability.
-- **Filter checking**: Only accept valid filters with at least authors or #p and only kinds matching NWC.
+- **Filter checking**: Only accept valid filters with at least authors or #p or #e and only kinds matching NWC.
 
 ## Installation
 

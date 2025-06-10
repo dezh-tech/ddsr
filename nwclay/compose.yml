@@ -25,4 +25,4 @@ services:
       - nwclay_network
 
 volumes:
-  nwclay_network:
+  nwclay_data:
