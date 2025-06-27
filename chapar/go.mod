@@ -5,11 +5,15 @@ go 1.24.1
 require github.com/kelseyhightower/envconfig v1.4.0
 
 require (
-	github.com/PowerDNS/lmdb-go v1.9.3 // indirect
-	github.com/fiatjaf/eventstore v0.16.7 // indirect
-)
-
-require (
+	github.com/cespare/xxhash/v2 v2.3.0 // indirect
+	github.com/dgraph-io/badger/v4 v4.5.0 // indirect
+	github.com/dgraph-io/ristretto/v2 v2.1.0 // indirect
+	github.com/dustin/go-humanize v1.0.1 // indirect
+	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
+	github.com/google/flatbuffers v24.12.23+incompatible // indirect
+	github.com/pkg/errors v0.9.1 // indirect
+	go.opencensus.io v0.24.0 // indirect
+	google.golang.org/protobuf v1.36.2 // indirect
 	fiatjaf.com/lib v0.3.1 // indirect
 	github.com/ImVexed/fasturl v0.0.0-20230304231329-4e41488060f3 // indirect
 	github.com/andybalholm/brotli v1.1.1 // indirect
@@ -23,6 +27,7 @@ require (
 	github.com/decred/dcrd/crypto/blake256 v1.1.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.4.0 // indirect
 	github.com/fasthttp/websocket v1.5.12 // indirect
+	github.com/fiatjaf/eventstore v0.16.7
 	github.com/fiatjaf/khatru v0.17.4
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect

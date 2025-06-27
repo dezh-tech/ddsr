@@ -37,13 +37,14 @@ The easiest way to run Chapar is by using the prebuilt image:
 
 1. **Pull the latest image**
 
-   ```sh
-   docker pull dezhtech/chapar
-   ```
+```sh
+docker pull dezhtech/chapar
+```
 
 2. **Run Chapar with environment variables**
-   ```sh
-   docker run -d --name chapar \
+
+```sh
+docker run -d --name chapar \
    -p 3334:3334 \
    -e RELAY_NAME="21maxi" \
    -e RELAY_PUBKEY="your_pubkey" \
@@ -55,7 +56,7 @@ The easiest way to run Chapar is by using the prebuilt image:
    -e WORKING_DIR="chapar_wd/" \
    -e RELAY_PORT=":1717" \
    dezhtech/chapar
-   ```
+```
 
 ---
 

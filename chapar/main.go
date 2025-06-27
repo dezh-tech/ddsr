@@ -11,7 +11,7 @@ import (
 	"path"
 	"syscall"
 
-	"github.com/fiatjaf/eventstore/lmdb"
+	"github.com/fiatjaf/eventstore/badger"
 	"github.com/fiatjaf/khatru"
 	"github.com/nbd-wtf/go-nostr"
 )
@@ -43,7 +43,7 @@ func main() {
 	relay.Info.Banner = config.RelayBanner
 	relay.Info.AddSupportedNIPs([]int{17, 59, 44})
 
-	mainDB := &lmdb.LMDBBackend{
+	mainDB := &badger.BadgerBackend{
 		Path: path.Join(config.WorkingDirectory, "database"),
 	}
 	mainDB.Init()
