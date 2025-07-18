@@ -19,6 +19,9 @@ Here is a list of DSRs developed by the Dezh:
     - **Blossom**: You can store software images, icons, and binaries.
     - **NIP-86**: You can limit write access to software publishers.
 
+>[!NOTE]
+> We suggest using [Zapstore relay](https://github.com/zapstore/relay) which is designed for the same purpose.
+
 2. [210maxi](./210maxi): A relay that only accepts 210-character events, tuned for [NIP-B1](https://github.com/nostr-protocol/nips/pull/1710) feeds.
     - **Limits**: Only accept kind 25, 1111, 7, 5, 9734, 9735, 0, 3.
     - **NIP-50**: search your favorite tiny notes.
