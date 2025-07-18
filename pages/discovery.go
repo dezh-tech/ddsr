@@ -43,7 +43,7 @@ func runDiscovery() {
 func collect(r *nostr.Relay) {
 	sub, err := r.Subscribe(context.Background(), filters)
 	if err != nil {
-		log.Printf("error on subscribing to: %s\nerror:\n", r.URL, err.Error())
+		log.Printf("error on subscribing to: %s\nerror: %s\n", r.URL, err.Error())
 	}
 
 	// TODO::: retry to connect if reason is timeout.
@@ -56,8 +56,10 @@ func collect(r *nostr.Relay) {
 	for ev := range sub.Events {
 		reject := false
 		for _, r := range relay.RejectEvent {
-			reject, _ := r(context.Background(), ev)
-			reject = reject
+			rejectEvent, _ := r(context.Background(), ev)
+			if rejectEvent {
+				reject = true
+			}
 		}
 
 		if reject {

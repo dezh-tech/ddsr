@@ -78,7 +78,7 @@ func BlockIP(_ context.Context, ip net.IP, reason string) error {
 	return nil
 }
 
-func UnblockIP(_ context.Context, ip net.IP, reason string) error {
+func UnblockIP(_ context.Context, ip net.IP, _ string) error {
 	management.Lock()
 	defer management.Unlock()
 
@@ -192,7 +192,7 @@ func GrantAdmin(ctx context.Context, pubkey string, methods []string) error {
 	defer management.Unlock()
 
 	if len(methods) == 0 {
-		return errors.New("Methods can't be 0")
+		return errors.New("methods can't be 0")
 	}
 
 	management.Admins[pubkey] = methods
@@ -208,15 +208,14 @@ func RevokeAdmin(ctx context.Context, pubkey string, methods []string) error {
 
 	_, isAdmin := management.Admins[pubkey]
 	if !isAdmin {
-		return fmt.Errorf("Pubkey %s is already not in admins list", pubkey)
+		return fmt.Errorf("pubkey %s is already not in admins list", pubkey)
 	}
 
 	management.Admins[pubkey] = slices.DeleteFunc(management.Admins[pubkey], func(m string) bool {
 		return slices.Contains(methods, m)
 	})
 
-	allowedMethods, _ := management.Admins[pubkey]
-	if len(allowedMethods) == 0 {
+	if len(management.Admins[pubkey]) == 0 {
 		delete(management.Admins, pubkey)
 	}
 
@@ -235,31 +234,31 @@ func LoadManagement() {
 			Admins:           make(map[string][]string),
 		})
 		if err != nil {
-			log.Fatalf("can't make management.json", "err", err.Error())
+			log.Fatalf("can't make management.json: %s", err.Error())
 		}
 
 		if err := WriteFile(path.Join(config.WorkingDirectory, "/management.json"), data); err != nil {
-			log.Fatalf("can't make management.json", "err", err.Error())
+			log.Fatalf("can't make management.json: %s", err.Error())
 		}
 	}
 
 	data, err := ReadFile(path.Join(config.WorkingDirectory, "/management.json"))
 	if err != nil {
-		log.Fatalf("can't read management.json", "err", err.Error())
+		log.Fatalf("can't read management.json: %s", err.Error())
 	}
 
 	if err := json.Unmarshal(data, management); err != nil {
-		log.Fatalf("can't read management.json", "err", err.Error())
+		log.Fatalf("can't read management.json: %s", err.Error())
 	}
 }
 
 func UpdateManagement() {
 	data, err := json.Marshal(management)
 	if err != nil {
-		log.Fatalf("can't update management.json", "err", err.Error())
+		log.Fatalf("can't update management.json: %s", err.Error())
 	}
 
 	if err := WriteFile(path.Join(config.WorkingDirectory, "/management.json"), data); err != nil {
-		log.Fatalf("can't update management.json", "err", err.Error())
+		log.Fatalf("can't update management.json: %s", err.Error())
 	}
 }
