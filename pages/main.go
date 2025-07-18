@@ -67,8 +67,8 @@ func main() {
 		management.Lock()
 		defer management.Unlock()
 
-		if event.Kind != 10002 || event.Kind != 0 ||
-			event.Kind != 3 || event.Kind != 5 || event.Kind != 1984 || event.Kind != 10063 {
+		if event.Kind != 10002 && event.Kind != 0 &&
+			event.Kind != 3 && event.Kind != 5 && event.Kind != 1984 && event.Kind != 10063 {
 			return true, "blocked: we only accept kinds: 0, 3, 5, 1984, 10002, 10063"
 		}
 
