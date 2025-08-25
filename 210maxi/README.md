@@ -49,10 +49,10 @@ The easiest way to run 210Maxi is by using the prebuilt image:
    -e RELAY_NAME="21maxi" \
    -e RELAY_PUBKEY="your_pubkey" \
    -e RELAY_DESCRIPTION="Only accepts 210 char events" \
-   -e RELAY_URL="wss://210maxi.com" \
-   -e RELAY_ICON="https://your-icon-url.png" \
-   -e RELAY_BANNER="https://your-banner-url.png" \
-   -e RELAY_CONTACT="https://dezh.tech" \
+   -e RELAY_URL="wss://example.com" \
+   -e RELAY_ICON="https://example.com/icon.png" \
+   -e RELAY_BANNER="https://example.com/banner.png" \
+   -e RELAY_CONTACT="https://example.com" \
    -e WORKING_DIR="210maxi_wd/" \
    -e RELAY_PORT=":2100" \
    dezhtech/210maxi

@@ -8,13 +8,13 @@ services:
     ports:
       - "1717:1717"
     environment:
-      RELAY_NAME: "chapar"
+      RELAY_NAME: "Chapar"
       RELAY_PUBKEY: "your_pubkey"
       RELAY_DESCRIPTION: "We only accept kin 1059 events!"
-      RELAY_URL: "wss://chapar.com"
-      RELAY_ICON: "https://your-icon-url.png"
-      RELAY_BANNER: "https://your-banner-url.png"
-      RELAY_CONTACT: "https://dezh.tech"
+      RELAY_URL: "wss://example.com"
+      RELAY_ICON: "https://example.com/icon.png"
+      RELAY_BANNER: "https://example.com/banner.png"
+      RELAY_CONTACT: "https://example.com"
       WORKING_DIR: "chapar_wd/"
       RELAY_PORT: ":1717"
     volumes:

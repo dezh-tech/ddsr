@@ -47,13 +47,13 @@ The easiest way to run Pages is by using the prebuilt image:
    ```sh
    docker run -d --name pages \
    -p 3334:3334 \
-   -e RELAY_NAME="pages" \
+   -e RELAY_NAME="Pages" \
    -e RELAY_PUBKEY="your_pubkey" \
    -e RELAY_DESCRIPTION="Specialized Nostr Relay For AppStores" \
-   -e RELAY_URL="wss://jellyfish.land" \
-   -e RELAY_ICON="https://your-icon-url.png" \
-   -e RELAY_BANNER="https://your-banner-url.png" \
-   -e RELAY_CONTACT="https://dezh.tech" \
+   -e RELAY_URL="wss://example.com" \
+   -e RELAY_ICON="https://example.com/icon.png" \
+   -e RELAY_BANNER="https://example.com/banner.png" \
+   -e RELAY_CONTACT="https://example.com" \
    -e WORKING_DIR="pages_wd/" \
    -e RELAY_PORT=":3334" \
    -e ADMIN_PUBKEYS="" \
@@ -86,10 +86,10 @@ Modify the `env` variables in `.env` file, docker compose file or docker command
 - `RELAY_NAME` – The name of the relay (default: `pages`).
 - `RELAY_PUBKEY` – The owner's hex key (convert `npub` to hex [here](https://nostrcheck.me/converter/)).
 - `RELAY_DESCRIPTION` – A short description of the relay.
-- `RELAY_URL` – WebSocket URL for the relay (e.g., `wss://abc.com`).
+- `RELAY_URL` – WebSocket URL for the relay (e.g., `wss://example.com`).
 - `RELAY_ICON` – URL to the relay's icon.
 - `RELAY_BANNER` – URL to the relay's banner image.
-- `RELAY_CONTACT` – Contact URL (e.g., `https://dezh.tech`).
+- `RELAY_CONTACT` – Contact URL (e.g., `https://example.com`).
 
 ### Storage & Working Directory
 

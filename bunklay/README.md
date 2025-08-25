@@ -45,13 +45,13 @@ The easiest way to run Bunklay is by using the prebuilt image:
 ```sh
    docker run -d --name bunklay \
    -p 3334:3334 \
-   -e RELAY_NAME="bunklay" \
+   -e RELAY_NAME="Bunklay" \
    -e RELAY_PUBKEY="your_pubkey" \
    -e RELAY_DESCRIPTION="Only accepts bunker events" \
-   -e RELAY_URL="wss://bunklay.com" \
-   -e RELAY_ICON="https://your-icon-url.png" \
-   -e RELAY_BANNER="https://your-banner-url.png" \
-   -e RELAY_CONTACT="https://dezh.tech" \
+   -e RELAY_URL="wss://example.com" \
+   -e RELAY_ICON="https://example.com/icon.png" \
+   -e RELAY_BANNER="https://example.com/banner.png" \
+   -e RELAY_CONTACT="https://example.com" \
    -e RELAY_PORT=":3334" \
    -e WORKING_DIR="bunklay_wd/" \
    -e KEEP_IN_MINUTES=10 \

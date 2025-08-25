@@ -14,20 +14,23 @@ This project is based on [Khatru](https://github.com/fiatjaf/khatru), [Event Sto
 
 Here is a list of DSRs developed by the Dezh:
 
-1. [Zapoli](./zapoli): A relay designed to used by [NIP-82](https://github.com/nostr-protocol/nips/pull/1336) clients.
+1. [Zapoli](./zapoli): A relay designed to used by [NIP-82](https://github.com/nostr-protocol/nips/pull/1336) clients.   
     - **NIP-50**: You can search between multiple software applications.
     - **Blossom**: You can store software images, icons, and binaries.
     - **NIP-86**: You can limit write access to software publishers.
 
->[!NOTE]
-> We suggest using [Zapstore relay](https://github.com/zapstore/relay) which is designed for the same purpose.
+>[!WARNING]
+> This relay is deprecated in favor of [Zapstore relay](https://github.com/zapstore/relay).
 
 2. [210maxi](./210maxi): A relay that only accepts 210-character events, tuned for [NIP-B1](https://github.com/nostr-protocol/nips/pull/1710) feeds.
     - **Limits**: Only accept kind 25, 1111, 7, 5, 9734, 9735, 0, 3.
     - **NIP-50**: search your favorite tiny notes.
     - **NIP-86**: manageable with the support of reporting. (WIP)
 
-3. [Pages](./pages): A relay that only keeps profiles and follow lists. You can simply resolve any pubkey from it. 
+>[!WARNING]
+> This relay is deprecated due the lack of users.
+
+3. [Pages](./pages): A relay that only keeps profiles and follow lists. You can simply resolve any pubkey from it.
     - **NIP-50**: You can search profiles.
     - **Control**: You can directly send your profile update/deletion to it.
     - **Discovery**: It scrapes new profiles.
@@ -46,6 +49,10 @@ Here is a list of DSRs developed by the Dezh:
 6. [Chapar](./chapar/): A relay that only accepts chat app messages.
     - **Limited Kinds**: Only accepts kinds related and accepted in NIP-59.
     - **Limited queries**: You need to authenticate before reading any events, and you can only read events related to you.
+
+6. [Proxium](./proxium/): A relay that proxies your event and filters to other relays you selected.
+    - **Proxies Filters**: Fetch your query from multiple relays.
+    - **Proxies Events**: Sends your events to other relays.
 
 > [!NOTE]
 > You can open your target relay and find full documentation there.

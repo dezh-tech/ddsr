@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -12,8 +13,8 @@ import (
 	"slices"
 	"syscall"
 
-	"github.com/fiatjaf/eventstore/bluge"
 	"github.com/fiatjaf/eventstore/badger"
+	"github.com/fiatjaf/eventstore/bluge"
 	"github.com/fiatjaf/khatru"
 	"github.com/fiatjaf/khatru/policies"
 	"github.com/nbd-wtf/go-nostr"
@@ -26,6 +27,10 @@ var (
 
 	//go:embed static/index.html
 	landingTempl []byte
+
+	kindsToDiscoverAndAccept = []int{0, 3, 5, 10002, 1984, 10063, 10000,
+		10001, 10002, 10003, 10004, 10005, 10006, 10007, 10009, 10012,
+		10015, 10020, 10030, 10050, 10086, 10087, 10088, 10089, 30315}
 )
 
 func main() {
@@ -67,9 +72,8 @@ func main() {
 		management.Lock()
 		defer management.Unlock()
 
-		if event.Kind != 10002 && event.Kind != 0 &&
-			event.Kind != 3 && event.Kind != 5 && event.Kind != 1984 && event.Kind != 10063 {
-			return true, "blocked: we only accept kinds: 0, 3, 5, 1984, 10002, 10063"
+		if !slices.Contains(kindsToDiscoverAndAccept, event.Kind) {
+			return true, fmt.Sprintf("blocked: we only accept kinds: %v", kindsToDiscoverAndAccept)
 		}
 
 		_, bannedPubkey := management.BannedPubkeys[event.PubKey]

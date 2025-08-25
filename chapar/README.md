@@ -46,13 +46,13 @@ docker pull dezhtech/chapar
 ```sh
 docker run -d --name chapar \
    -p 3334:3334 \
-   -e RELAY_NAME="21maxi" \
+   -e RELAY_NAME="Chapar" \
    -e RELAY_PUBKEY="your_pubkey" \
    -e RELAY_DESCRIPTION="We only accept kin 1059 events!" \
-   -e RELAY_URL="wss://chapar.com" \
-   -e RELAY_ICON="https://your-icon-url.png" \
-   -e RELAY_BANNER="https://your-banner-url.png" \
-   -e RELAY_CONTACT="https://dezh.tech" \
+   -e RELAY_URL="wss://example.com" \
+   -e RELAY_ICON="https://example.com/icon.png" \
+   -e RELAY_BANNER="https://example.com/banner.png" \
+   -e RELAY_CONTACT="https://example.com" \
    -e WORKING_DIR="chapar_wd/" \
    -e RELAY_PORT=":1717" \
    dezhtech/chapar

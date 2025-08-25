@@ -8,13 +8,13 @@ services:
     ports:
       - "3334:3334"
     environment:
-      RELAY_NAME: "pages"
+      RELAY_NAME: "Pages"
       RELAY_PUBKEY: "your_pubkey"
       RELAY_DESCRIPTION: "A Nostr relay"
-      RELAY_URL: "wss://abc.com"
-      RELAY_ICON: "https://your-icon-url.png"
-      RELAY_BANNER: "https://your-banner-url.png"
-      RELAY_CONTACT: "https://dezh.tech"
+      RELAY_URL: "wss://example.com"
+      RELAY_ICON: "https://example.com/icon.png"
+      RELAY_BANNER: "https://example.com/banner.png"
+      RELAY_CONTACT: "https://example.com"
       WORKING_DIR: "pages_wd/"
       RELAY_PORT: ":3334"
       ADMIN_PUBKEYS: ""
