@@ -3,20 +3,16 @@ package main
 import (
 	"context"
 	_ "embed"
-	"fmt"
+	"errors"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
-	"path"
 	"slices"
 	"syscall"
 
-	"github.com/fiatjaf/eventstore/badger"
-	"github.com/fiatjaf/eventstore/bluge"
 	"github.com/fiatjaf/khatru"
-	"github.com/fiatjaf/khatru/policies"
 	"github.com/nbd-wtf/go-nostr"
 	"github.com/nbd-wtf/go-nostr/nip86"
 )
@@ -27,14 +23,10 @@ var (
 
 	//go:embed static/index.html
 	landingTempl []byte
-
-	kindsToDiscoverAndAccept = []int{0, 3, 5, 10002, 1984, 10063, 10000,
-		10001, 10002, 10003, 10004, 10005, 10006, 10007, 10009, 10012,
-		10015, 10020, 10030, 10050, 10086, 10087, 10088, 10089, 10090, 30315}
 )
 
 func main() {
-	log.SetPrefix("Pages ")
+	log.SetPrefix("Proxium ")
 	log.Printf("Running %s\n", StringVersion())
 
 	relay = khatru.NewRelay()
@@ -50,30 +42,17 @@ func main() {
 	relay.Info.Contact = config.RelayContact
 	relay.Info.URL = config.RelayURL
 	relay.Info.Banner = config.RelayBanner
-	relay.Info.AddSupportedNIPs([]int{50, 45})
+	relay.Info.AddSupportedNIPs([]int{50})
 
-	persistStore := &badger.BadgerBackend{
-		Path: path.Join(config.WorkingDirectory, "database"),
-	}
-	persistStore.Init()
-
-	searchDB := &bluge.BlugeBackend{
-		Path:          path.Join(config.WorkingDirectory, "search_database"),
-		RawEventStore: persistStore,
-	}
-	searchDB.Init()
-
-	relay.StoreEvent = append(relay.StoreEvent, persistStore.SaveEvent, searchDB.SaveEvent)
-	relay.QueryEvents = append(relay.QueryEvents, persistStore.QueryEvents, searchDB.QueryEvents)
-	relay.CountEvents = append(relay.CountEvents, persistStore.CountEvents)
-	relay.DeleteEvent = append(relay.DeleteEvent, persistStore.DeleteEvent, searchDB.DeleteEvent)
-	relay.ReplaceEvent = append(relay.ReplaceEvent, persistStore.ReplaceEvent, searchDB.ReplaceEvent)
 	relay.RejectEvent = append(relay.RejectEvent, func(ctx context.Context, event *nostr.Event) (reject bool, msg string) {
 		management.Lock()
 		defer management.Unlock()
 
-		if !slices.Contains(kindsToDiscoverAndAccept, event.Kind) {
-			return true, fmt.Sprintf("blocked: we only accept kinds: %v", kindsToDiscoverAndAccept)
+		if config.PubkeyWhiteListed {
+			_, allowedPubkey := management.BannedPubkeys[event.PubKey]
+			if !allowedPubkey {
+				return true, "blocked: you are not whitelisted"
+			}
 		}
 
 		_, bannedPubkey := management.BannedPubkeys[event.PubKey]
@@ -86,9 +65,28 @@ func main() {
 			return true, "blocked: event is blocked"
 		}
 
-		rjct, message := policies.ValidateKind(ctx, event)
-		if rjct {
-			return rjct, message
+		return false, ""
+	})
+
+	relay.RejectFilter = append(relay.RejectFilter, func(ctx context.Context, filter nostr.Filter) (reject bool, msg string) {
+		management.Lock()
+		defer management.Unlock()
+
+		pubkey := khatru.GetAuthed(ctx)
+		if pubkey == "" {
+			return true, "auth-required: we can't serve event to users without AUTH"
+		}
+
+		if config.PubkeyWhiteListed {
+			_, allowedPubkey := management.BannedPubkeys[pubkey]
+			if !allowedPubkey {
+				return true, "blocked: you are not whitelisted"
+			}
+		}
+
+		_, bannedPubkey := management.BannedPubkeys[pubkey]
+		if bannedPubkey {
+			return true, "blocked: you are blacklisted"
 		}
 
 		return false, ""
@@ -97,6 +95,8 @@ func main() {
 	relay.StoreEvent = append(relay.StoreEvent, func(ctx context.Context, event *nostr.Event) error {
 		management.Lock()
 		defer management.Unlock()
+
+		go broadcast(event)
 
 		if event.Kind == nostr.KindReporting {
 			for _, t := range event.Tags {
@@ -108,21 +108,50 @@ func main() {
 					if len(t[1]) == 64 {
 						management.ModerationEvents[t[1]] = event.Content
 					}
+
+					if slices.Contains(config.Moderators, event.PubKey) {
+						management.BannedEvents[t[1]] = event.Content
+					}
 				}
 
-				if slices.Contains(config.Moderators, event.PubKey) {
-					for _, d := range relay.DeleteEvent {
-						if err := d(ctx, event); err != nil {
-							return err
-						}
+				if t[0] == "p" && t[1] != "" {
+					if slices.Contains(config.Moderators, event.PubKey) {
+						management.BannedPubkeys[t[1]] = event.Content
 					}
 				}
 			}
+
+			UpdateManagement()
 		}
 
-		UpdateManagement()
-
 		return nil
+	})
+
+	relay.DeleteEvent = append(relay.DeleteEvent, func(ctx context.Context, event *nostr.Event) error {
+		broadcast(event)
+		return nil
+	})
+
+	relay.QueryEvents = append(relay.QueryEvents, func(ctx context.Context,
+		filter nostr.Filter) (chan *nostr.Event, error) {
+		ch := make(chan *nostr.Event)
+
+		pubkey := khatru.GetAuthed(ctx)
+		if pubkey == "" {
+			return nil, errors.New("auth-required: we can't serve event to users without AUTH")
+		}
+
+		events := aggregate(&nostr.Filters{filter}, pubkey)
+
+		go func() {
+			defer close(ch)
+
+			for _, event := range events {
+				ch <- event
+			}
+		}()
+
+		return ch, nil
 	})
 
 	LoadManagement()
@@ -138,6 +167,7 @@ func main() {
 		UpdateManagement()
 	}
 
+	relay.ManagementAPI.AllowPubKey = AllowPubkey
 	relay.ManagementAPI.BanPubKey = BanPubkey
 	relay.ManagementAPI.BanEvent = BanEvent
 	relay.ManagementAPI.ListBannedEvents = ListBannedEvents
@@ -168,8 +198,6 @@ func main() {
 	mux := relay.Router()
 	mux.HandleFunc("GET /{$}", StaticViewHandler)
 
-	go runDiscovery()
-
 	log.Println("Relay running on port: ", config.RelayPort)
 	http.ListenAndServe(config.RelayPort, relay)
 
@@ -179,8 +207,6 @@ func main() {
 	sig := <-sigChan
 
 	log.Print("Received signal: Initiating graceful shutdown", "signal", sig.String())
-	persistStore.Close()
-	searchDB.Close()
 }
 
 func StaticViewHandler(w http.ResponseWriter, _ *http.Request) {
