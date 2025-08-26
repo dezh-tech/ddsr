@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">
-A Nostr relay only for profiles!
+A Nostr relay that proxy your notes and other stuffs.
 </h1>
 
 <br/>
@@ -14,11 +14,8 @@ A Nostr relay only for profiles!
 
 ## Features
 
-- NIP-50: you can search profiles.
-- You can directly send your profile update/deletion to it.
-- It scrape new profiles.
-- Admins can call management APIs and moderators can send reporting events (kind 1984) to remove a profile from relay.
-- NIP-86: Ban specific profiles/Check reported ones.
+- **Proxies Filters**: Fetch your query from multiple relays.
+- **Proxies Events**: Sends your events to other relays.
 
 
 ## Installation
@@ -40,12 +37,12 @@ The easiest way to run Pages is by using the prebuilt image:
 1. **Pull the latest image**
 
    ```sh
-   docker pull dezhtech/pages
+   docker pull dezhtech/proxium
    ```
 
 2. **Run Pages with environment variables**
    ```sh
-   docker run -d --name pages \
+   docker run -d --name proxium \
    -p 3334:3334 \
    -e RELAY_NAME="proxium" \
    -e RELAY_PUBKEY="your_pubkey" \
@@ -54,13 +51,13 @@ The easiest way to run Pages is by using the prebuilt image:
    -e RELAY_ICON="https://file.nostrmedia.com/f/bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5/4ba621f11b122afd4aa07a5c00f7d18d14572f61035f397839ec5ac6a400c946.png" \
    -e RELAY_BANNER="https://file.nostrmedia.com/f/bd4ae3e67e29964d494172261dc45395c89f6bd2e774642e366127171dfb81f5/be5b462b3fe0d2d24d0a96147b4e15a6e3f6e3d5d39da7d3130d196e5a066968.png" \
    -e RELAY_CONTACT="https://example.com" \
-   -e WORKING_DIR="pages_wd/" \
+   -e WORKING_DIR="proxium_wd/" \
    -e RELAY_PORT=":3334" \
    -e ADMIN_PUBKEYS="" \
    -e MODERATOR_PUBKEYS="" \
    -e WRITE_FALLBACK_RELAYS="nos.lol,purplepag.es,relay.nostr.lol,jellyfish.land,relay.primal.net,nostr.mom,nostr.wine,nostr.land" \
    -e READ_FALLBACK_RELAYS="nos.lol,purplepag.es,relay.nostr.lol,jellyfish.land,relay.primal.net,nostr.mom,nostr.wine,nostr.land" \
-   dezhtech/pages
+   dezhtech/proxium
    ```
 
 ---
